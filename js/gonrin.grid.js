@@ -1265,7 +1265,8 @@
             return options;
         };
         
-        grobject.filter = function(query){
+        grobject.filter = function(query,extra_params){
+		options.extra_params= extra_params;
         	options.filters = query;
         	options.pagination.page = 1;
         	boundData();
