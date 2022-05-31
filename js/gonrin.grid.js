@@ -975,11 +975,19 @@
         			//end filter
         			//var url = collection.url + "?page=" + page + "&results_per_page=" + pageSize + (query? "&q=" + JSON.stringify(query): "");
         			var url = collection.url;
-        			if(options.paginationMode === "server"){
-        				url = url + "?page=" + page + "&results_per_page=" + pageSize + (query? "&q=" + JSON.stringify(query): "");
-        			}else{
-        				url = url + (query? "?q=" + JSON.stringify(query): "");
-        			}
+				var extra_params = options.extra_params || {};
+				if (options.paginationMode === "server") {
+					let extra_params_string = '';
+					for (const key in extra_params) {
+						if (Object.hasOwnProperty.call(extra_params, key)) {
+							const element = extra_params[key];
+							extra_params_string = extra_params_string + '&'+ key + '=' + element;
+						}
+					}
+					url = url + "?page=" + page + "&results_per_page=" + pageSize + extra_params_string + (query ? "&q=" + JSON.stringify(query) : "");
+				} else {
+					url = url + (query ? "?q=" + JSON.stringify(query) : "");
+				}
         			
         			collection.fetch({
         				url: url,
