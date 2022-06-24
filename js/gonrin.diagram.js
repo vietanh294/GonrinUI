@@ -648,7 +648,6 @@
             //     loaded = true;
             // else
             //     return;
-            console.log('diagram_load============================');
 
             var el = document.createElement("DIV");
             el.classList.add('indicator');
@@ -678,7 +677,6 @@
         }
 
         function blockSnap(drag, first, parent) {
-            console.log('blockSnap===========================', drag, first, parent);
             return snapping(drag, first, parent);
         }
 
@@ -726,7 +724,6 @@
             return true;
         },
         rearrange: function () {
-            console.log('dg_rearrange========================');
             return false;
         },
         spacing_x: 20,
