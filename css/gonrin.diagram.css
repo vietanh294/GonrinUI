@@ -1,0 +1,118 @@
+.dragging {
+    z-index: 111 !important;
+    position: relative !important;
+}
+
+.block {
+    position: absolute;
+    z-index: 9;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 60px;
+    background-color: #217ce8;
+    margin-top: -5px;
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.05, 0.03, 0.35, 1);
+    transform: scale(1);
+    position: absolute;
+    z-index: 2;
+}
+
+.invisible {
+    opacity: 0 !important;
+    transform: scale(0);
+}
+
+.indicator:after {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: #217ce8;
+    transform: scale(1.7);
+    opacity: 0.2;
+    border-radius: 60px;
+}
+
+.arrowblock {
+    position: absolute;
+    width: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.arrowblock svg {
+    width: -webkit-fill-available;
+    overflow: visible;
+}
+.diagram_container {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    background-image: url(../images/tile.png);
+    background-repeat: repeat;
+    background-size: 30px 30px;
+    background-color: #FBFBFB;
+    width:  100vw;;
+    height: 100vh;
+}
+
+.diagram_canvas {
+    position: absolute;
+    width: calc(100% - 361px);
+    height: 100%;
+    /* height: calc(100% - 71px); */
+    /* top: 71px; */
+    left: 361px;
+    z-index: 0;
+    overflow: auto;
+}
+.diagram_blocklist{
+    height: calc(100vh - 168px);
+    overflow: auto;
+}
+.blockelem:first-child {
+    margin-top: 20px
+}
+.blockelem {
+    padding-top: 10px;
+    width: 318px;
+    border: 1px solid transparent;
+    transition-property: box-shadow, height;
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.05,.03,.35,1);
+    border-radius: 5px;
+    box-shadow: 0px 0px 30px rgba(22, 33, 74, 0);
+    box-sizing: border-box;
+}
+.blockelem:hover {
+    box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.08);
+    border-radius: 5px;
+    background-color: #FFF;
+    cursor: pointer;
+}
+
+.block {
+    background-color: #FFF;
+    margin-top: 0px!important;
+    box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.05);
+}
+
+.selectedblock {
+    border: 2px solid #217CE8;
+    box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.08);
+}
+
+@media only screen and (max-width: 832px) {
+    #centerswitch {
+        display: none;
+    }
+}
+@media only screen and (max-width: 560px) {
+    #names {
+        display: none;
+    }   
+}

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Primary Meta Tags -->
+    <title>Diagram- The simple flowchart engine</title>
+    <meta name="title" content="Flowy - The simple flowchart engine">
+    <meta name="description"
+        content="Flowy is a minimal javascript library to create flowcharts. Use it for automation software, mind mapping tools, programming platforms, and more. Made by Alyssa X.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alyssax.com/x/flowy">
+    <meta property="og:title" content="Flowy - The simple flowchart engine">
+    <meta property="og:description"
+        content="Flowy is a minimal javascript library to create flowcharts. Use it for automation software, mind mapping tools, programming platforms, and more. Made by Alyssa X.">
+    <meta property="og:image" content="https://alyssax.com/x/vendor/diagram/assets/meta.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://alyssax.com/x/flowy">
+    <meta property="twitter:site" content="alyssaxuu">
+    <meta property="twitter:title" content="Flowy - The simple flowchart engine">
+    <meta property="twitter:description"
+        content="Flowy is a minimal javascript library to create flowcharts. Use it for automation software, mind mapping tools, programming platforms, and more. Made by Alyssa X.">
+    <meta property="twitter:image" content="https://alyssax.com/x/vendor/diagram/assets/meta.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/gonrin.diagram.css">
+
+    <script src="js/gonrin.core.js"></script>
+    <script src="js/gonrin.diagram.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#diagram_container').diagrambox({});
+        });
+    </script>
+    <style>
+        #leftcard {
+            width: 360px;
+            background-color: #FFF;
+            border: 1px solid #E8E8EF;
+            box-sizing: border-box;
+            /* padding-top: 85px; */
+            padding-left: 20px;
+            height: 100%;
+            position: absolute;
+            z-index: 2;
+        }
+
+        #leftcard #search input {
+            width: 318px;
+            height: 40px;
+            background-color: #FFF;
+            border: 1px solid #E8E8EF;
+            box-sizing: border-box;
+            box-shadow: 0px 2px 8px rgba(34, 34, 87, 0.05);
+            border-radius: 5px;
+            text-indent: 35px;
+            font-family: Roboto;
+            font-size: 16px;
+        }
+
+        ::-webkit-input-placeholder {
+            /* Edge */
+            color: #C9C9D5;
+        }
+
+        :-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: #C9C9D5
+        }
+
+        ::placeholder {
+            color: #C9C9D5;
+        }
+
+        #leftcard #search img {
+            position: absolute;
+            margin-top: 10px;
+            width: 18px;
+            margin-left: 12px;
+        }
+
+        #subnav {
+            border-bottom: 1px solid #E8E8EF;
+            width: calc(100% + 20px);
+            margin-left: -20px;
+            margin-top: 10px;
+        }
+
+        .navdisabled {
+            transition: all .3s cubic-bezier(.05, .03, .35, 1);
+        }
+
+        .navdisabled:hover {
+            cursor: pointer;
+            opacity: .5;
+        }
+
+        .navactive {
+            color: #393C44 !important;
+        }
+
+        /* .diagram-nav-item {
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    color: #808292;
+    width: calc(88% / 4);
+    height: 48px;
+    line-height: 48px;
+    display: inline-block;
+    float: left;
+} */
+        #all-task {
+            font-family: Roboto;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+            color: #808292;
+            width: calc(100% / 4);
+            height: 48px;
+            line-height: 48px;
+            display: inline-block;
+            float: left;
+        }
+
+        #to-do-tasks {
+            font-family: Roboto;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+            color: #808292;
+            width: calc(100% / 4);
+            height: 48px;
+            line-height: 48px;
+            display: inline-block;
+            float: left;
+        }
+
+        .navactive:after {
+            display: block;
+            content: "";
+            width: 100%;
+            height: 4px;
+            background-color: #217CE8;
+            margin-top: -4px;
+        }
+
+        #in-progress-tasks {
+            display: inline-block;
+            font-family: Roboto;
+            font-weight: 500;
+            color: #808292;
+            font-size: 14px;
+            height: 48px;
+            line-height: 48px;
+            width: calc(100% / 4);
+            text-align: center;
+            float: left;
+        }
+
+        #done-tasks {
+            width: calc(100% / 4);
+            display: inline-block;
+            font-family: Roboto;
+            font-weight: 500;
+            color: #808292;
+            font-size: 14px;
+            height: 48px;
+            line-height: 48px;
+            text-align: center;
+        }
+
+        .blockelem:first-child {
+            margin-top: 20px
+        }
+
+        .blockelem {
+            padding-top: 10px;
+            width: 318px;
+            border: 1px solid transparent;
+            transition-property: box-shadow, height;
+            transition-duration: .2s;
+            transition-timing-function: cubic-bezier(.05, .03, .35, 1);
+            border-radius: 5px;
+            box-shadow: 0px 0px 30px rgba(22, 33, 74, 0);
+            box-sizing: border-box;
+        }
+
+        .blockelem:hover {
+            box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.08);
+            border-radius: 5px;
+            background-color: #FFF;
+            cursor: pointer;
+        }
+
+        .grabme,
+        .blockico {
+            display: inline-block;
+        }
+
+        .grabme {
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-bottom: -14px;
+            width: 15px;
+        }
+
+        #blocklist {
+            height: calc(100% - 220px);
+            overflow: auto;
+        }
+
+        #proplist {
+            height: calc(100% - 305px);
+            overflow: auto;
+            margin-top: -30px;
+            padding-top: 30px;
+        }
+
+        .blockin {
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 12px;
+        }
+
+        .blockico {
+            width: 36px;
+            height: 36px;
+            background-color: #F1F4FC;
+            border-radius: 5px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .blockico span {
+            height: 100%;
+            width: 0px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .blockico img {
+            vertical-align: middle;
+            margin-left: auto;
+            margin-right: auto;
+            display: inline-block;
+        }
+
+        .blocktext {
+            display: inline-block;
+            width: 220px;
+            vertical-align: top;
+            margin-left: 12px
+        }
+
+        .blocktitle {
+            margin: 0px !important;
+            padding: 0px !important;
+            font-family: Roboto;
+            font-weight: 500;
+            font-size: 16px;
+            color: #393C44;
+        }
+
+        .blockdesc {
+            margin-top: 5px;
+            font-family: Roboto;
+            color: #808292;
+            font-size: 14px;
+            line-height: 21px;
+        }
+
+        .blockdisabled {
+            background-color: #F0F2F9;
+            opacity: .5;
+        }
+
+        #closecard {
+            position: absolute;
+            margin-left: 339px;
+            background-color: #FFF;
+            border-radius: 0px 5px 5px 0px;
+            border-bottom: 1px solid #E8E8EF;
+            border-right: 1px solid #E8E8EF;
+            border-top: 1px solid #E8E8EF;
+            width: 53px;
+            height: 53px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #closecard img {
+            margin-top: 15px
+        }
+
+
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Old versions of Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+        }
+
+        .blockyname {
+            font-family: Roboto;
+            font-weight: 500;
+            color: #253134;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+            font-size: 16px;
+        }
+
+        .blockyleft img {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .blockyright {
+            display: inline-block;
+            float: right;
+            vertical-align: middle;
+            margin-right: 20px;
+            margin-top: 10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 5px;
+            text-align: center;
+            background-color: #FFF;
+            transition: all .3s cubic-bezier(.05, .03, .35, 1);
+            z-index: 10;
+        }
+
+        .blockyright:hover {
+            background-color: #F1F4FC;
+            cursor: pointer;
+        }
+
+        .blockyright img {
+            margin-top: 12px;
+        }
+
+        .blockyleft {
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .blockydiv {
+            width: 100%;
+            height: 1px;
+            background-color: #E9E9EF;
+        }
+
+        .blockyinfo {
+            font-family: Roboto;
+            font-size: 14px;
+            color: #808292;
+            margin-top: 15px;
+            text-indent: 20px;
+            margin-bottom: 20px;
+        }
+
+        .blockyinfo span {
+            color: #253134;
+            font-weight: 500;
+            display: inline-block;
+            border-bottom: 1px solid #D3DCEA;
+            line-height: 20px;
+            text-indent: 0px;
+        }
+
+        .block {
+            background-color: #FFF;
+            margin-top: 0px !important;
+            box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.05);
+        }
+
+        .selectedblock {
+            border: 2px solid #217CE8;
+            box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.08);
+        }
+
+        @media only screen and (max-width: 832px) {
+            #centerswitch {
+                display: none;
+            }
+        }
+
+        @media only screen and (max-width: 560px) {
+            #names {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    
+
+    <div class="diagram_container" id="diagram_container">
+        <div id="leftcard">
+            <div class="d-flex justify-contents-start">
+                <button class="btn btn-danger" id="output_diagram">output</button>
+                <button class="btn btn-success" id="diagram_deleteBlocks">delete_blocks</button>
+                <button class="btn btn-info" id="diagram_import">diagram_import</button>
+            </div>
+            <div id="closecard">
+                <img src="vendor/diagram/assets/closeleft.svg">
+            </div>
+            <div id="search">
+                <img src="vendor/diagram/assets/search.svg">
+                <input type="text" placeholder="Search blocks">
+            </div>
+            <div id="subnav">
+                <div id="all-task" class="navactive dg-nav-item" data-click="nav-item">All</div>
+                <div id="to-do-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="1">To Do</div>
+                <div id="in-progress-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="2">
+                    Progress</div>
+                <div id="done-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="3">Done</div>
+            </div>
+            <div id="diagram_blocklist">
+                <div class="blockelem create-flowy noselect">
+                    <input type="hidden" name='blockelemtype' class="blockelemtype" value="1">
+                    <div class="grabme">
+                        
+                        <img src="vendor/diagram/assets/grabme.svg">
+                    </div>
+                    <div class="blockin">
+                        <div class="blockico">
+                            <span></span>
+                            <img src="vendor/diagram/assets/eye.svg">
+                        </div>
+                        <div class="blocktext">
+                            <p class="blocktitle">New visitor</p>
+                            <p class="blockdesc">Triggers when somebody visits a specified page</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="blockelem create-flowy noselect">
+                    <input type="hidden" name='blockelemtype' class="blockelemtype" value="2">
+                    <div class="grabme">
+                        <img src="vendor/diagram/assets/grabme.svg">
+                    </div>
+                    <div class="blockin">
+                        <div class="blockico">
+                            <span></span>
+                            <img src="vendor/diagram/assets/action.svg">
+                        </div>
+                        <div class="blocktext">
+                            <p class="blocktitle">Action is performed</p>
+                            <p class="blockdesc">Triggers when somebody performs a specified action</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div id="diagram_canvas">
+        </div>
+    </div>
+    <script>
+        $('#output_diagram').on('click', function (e) {
+            console.log('diagram_output==========================',
+                $('#diagram_container').data('gonrin').diagram_output());
+        });
+        $('#diagram_deleteBlocks').unbind("click").bind("click", function () {
+            $('#diagram_container').data('gonrin').diagram_deleteBlocks()
+        });
+
+        $('#diagram_import').unbind("click").bind("click", function () {
+            let data = {
+                "html": "\n        <div class=\"blockelem noselect block\" style=\"left: 357px; top: 113.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"0\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/eyeblue.svg\"><p class=\"blockyname\">New visitor</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When a <span>new visitor</span> goes to <span>Site 1</span></div><div class=\"indicator invisible\" style=\"left: 154px; top: 110px;\"></div></div><div class=\"blockelem noselect block\" style=\"left: 20px; top: 302.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"1\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/actionblue.svg\"><p class=\"blockyname\">Action is performed</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When <span>Action 1</span> is performed</div></div><div class=\"arrowblock\" style=\"left: 173.5px; top: 222.949px;\"><input type=\"hidden\" class=\"arrowid\" value=\"1\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M342 0L342 40L5 40L5 80\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M0 75H10L5 80L0 75Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem noselect block\" style=\"left: 357px; top: 302.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"2\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/eyeblue.svg\"><p class=\"blockyname\">New visitor</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When a <span>new visitor</span> goes to <span>Site 1</span></div></div><div class=\"arrowblock\" style=\"left: 495.5px; top: 222.949px;\"><input type=\"hidden\" class=\"arrowid\" value=\"2\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 40L20 40L20 80\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 75H25L20 80L15 75Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem noselect block\" style=\"left: 694px; top: 302.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"3\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/eyeblue.svg\"><p class=\"blockyname\">New visitor</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When a <span>new visitor</span> goes to <span>Site 1</span></div></div><div class=\"arrowblock\" style=\"left: 495.5px; top: 222.949px;\"><input type=\"hidden\" class=\"arrowid\" value=\"3\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 40L357 40L357 80\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M352 75H362L357 80L352 75Z\" fill=\"#C5CCD0\"></path></svg></div>",
+                "blockarr": [
+                    {
+                        "parent": -1,
+                        "childwidth": 991,
+                        "id": 0,
+                        "x": 495.4886169433594,
+                        "y": 168.44886016845703,
+                        "width": 317,
+                        "height": 109
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 0,
+                        "id": 1,
+                        "x": 158.5,
+                        "y": 357.44031524658203,
+                        "width": 317,
+                        "height": 109
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 0,
+                        "id": 2,
+                        "x": 495.4886169433594,
+                        "y": 357.44031524658203,
+                        "width": 317,
+                        "height": 109
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 0,
+                        "id": 3,
+                        "x": 832.4914245605469,
+                        "y": 357.44031524658203,
+                        "width": 317,
+                        "height": 109
+                    }
+                ],
+                "blocks": [
+                    {
+                        "id": 0,
+                        "parent": -1,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            },
+                            {
+                                "name": "blockid",
+                                "value": "0"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem noselect block"
+                            },
+                            {
+                                "style": "left: 357px; top: 113.949px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 1,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "2"
+                            },
+                            {
+                                "name": "blockid",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem noselect block"
+                            },
+                            {
+                                "style": "left: 20px; top: 302.949px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            },
+                            {
+                                "name": "blockid",
+                                "value": "2"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem noselect block"
+                            },
+                            {
+                                "style": "left: 357px; top: 302.949px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            },
+                            {
+                                "name": "blockid",
+                                "value": "3"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem noselect block"
+                            },
+                            {
+                                "style": "left: 694px; top: 302.949px;"
+                            }
+                        ]
+                    }
+                ]
+            };
+            $('#diagram_container').data('gonrin').diagram_import(data)
+        });
+        // diagram_import
+    </script>
+</body>
+
+</html>
