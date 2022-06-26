@@ -16,8 +16,8 @@
     'use strict';
     var DiagramBox = function (element, options) {
         const root_element = document.getElementById(element.attr('id'));
-        var canvas_div = document.getElementById(options.canvas_id);
-        var dg_blocklist = root_element.querySelector('#' + options.blocklist_id);
+        const canvas_div = document.getElementById(options.canvas_id);
+        const dg_blocklist = root_element.querySelector('#' + options.blocklist_id);
 
         var init_children = function () {
             if (!!dg_blocklist) {
@@ -50,6 +50,9 @@
             },
             beforeDelete = function (drag, parent) {
                 return options.rearrange(drag, parent);
+            },
+            dblclick_handler = function (block_el, block_type) {
+                return options.dblclick_handler(block_el, block_type);
             };
 
         if (!Element.prototype.matches) {
@@ -89,6 +92,16 @@
             mouse_x, mouse_y,
             dragblock = false,
             prevblock = 0,
+            drawArrow = function (arrow, x, y, id) {
+                if (x < 0) {
+                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' 0L' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (y - 5) + 'H10L5 ' + y + 'L0 ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
+                    root_element.querySelector('.arrowid[value="' + drag.querySelector(".blockid").value + '"]').parentNode.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+                } else {
+                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (paddingy / 2) + 'L' + (x) + ' ' + (paddingy / 2) + 'L' + x + ' ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (x - 5) + ' ' + (y - 5) + 'H' + (x + 5) + 'L' + x + ' ' + y + 'L' + (x - 5) + ' ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
+                    root_element.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.left = blocks.filter(a => a.id == id)[0].x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+                }
+                root_element.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.top = blocks.filter(a => a.id == id)[0].y + (blocks.filter(a => a.id == id)[0].height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
+            },
             updateArrow = function (arrow, x, y, children) {
                 if (x < 0) {
                     root_element.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
@@ -187,6 +200,12 @@
                     return false;
                 }
             },
+            remove_parent_selecting = function () {
+                let list_block_class = root_element.querySelectorAll(".dg_block");
+                for (let i = 0; i < list_block_class.length; ++i) {
+                    list_block_class[i].classList.remove('parent-selecting');
+                }
+            },
             removeSelection = function () {
                 canvas_div.appendChild(root_element.querySelector(".indicator"));
                 drag.parentNode.removeChild(drag);
@@ -230,19 +249,10 @@
                     blockstemp = [];
                 }
             },
-            drawArrow = function (arrow, x, y, id) {
-                if (x < 0) {
-                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' 0L' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (y - 5) + 'H10L5 ' + y + 'L0 ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
-                    root_element.querySelector('.arrowid[value="' + drag.querySelector(".blockid").value + '"]').parentNode.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
-                } else {
-                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (paddingy / 2) + 'L' + (x) + ' ' + (paddingy / 2) + 'L' + x + ' ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (x - 5) + ' ' + (y - 5) + 'H' + (x + 5) + 'L' + x + ' ' + y + 'L' + (x - 5) + ' ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
-                    root_element.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.left = blocks.filter(a => a.id == id)[0].x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
-                }
-                root_element.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.top = blocks.filter(a => a.id == id)[0].y + (blocks.filter(a => a.id == id)[0].height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
-            },
             dg_snap = function (drag, i, blocko) {
                 if (!load_rearrange) {
                     canvas_div.appendChild(drag);
+
                 }
                 var totalwidth = 0;
                 var totalremove = 0;
@@ -345,10 +355,21 @@
                 rearrangeMe();
                 checkOffset();
             },
-            touchblock = function (event) {
+            dg_dblclick = function (event) {
+                let prototype_elem = event.target.closest(".dg_block");
+                if (!!prototype_elem) {
+                    dblclick_handler(prototype_elem, 'dg_block');
+                } else {
+                    let arrow_block_elem = event.target.closest(".arrowblock");
+                    if (!!arrow_block_elem) {
+                        dblclick_handler(arrow_block_elem, 'dg_arrowblock');
+                    }
+                }
+            },
+            diagram_touchblock = function (event) {
                 dragblock = false;
-                if (hasParentClass(event.target, "block")) {
-                    var theblock = event.target.closest(".block");
+                if (hasParentClass(event.target, "dg_block")) {
+                    var theblock = event.target.closest(".dg_block");
                     if (event.targetTouches) {
                         mouse_x = event.targetTouches[0].clientX;
                         mouse_y = event.targetTouches[0].clientY;
@@ -356,7 +377,7 @@
                         mouse_x = event.clientX;
                         mouse_y = event.clientY;
                     }
-                    if (event.type !== "mouseup" && hasParentClass(event.target, "block")) {
+                    if (event.type !== "mouseup" && hasParentClass(event.target, "dg_block")) {
                         if (event.which != 3) {
                             if (!dg_active && !load_rearrange) {
                                 dragblock = true;
@@ -369,7 +390,10 @@
                 }
             },
             hasParentClass = function (element, classname) {
-                if (element.className) {
+                // if (!element) {
+                //     return false;
+                // }
+                if (element.className && typeof element.className === 'string') {
                     if (element.className.split(' ').indexOf(classname) >= 0) return true;
                 }
                 return element.parentNode && hasParentClass(element.parentNode, classname);
@@ -453,7 +477,7 @@
                     original = event.target.closest(".dg-el-prototype");
                     var newNode = event.target.closest(".dg-el-prototype").cloneNode(true);
                     event.target.closest(".dg-el-prototype").classList.add("dragnow");
-                    newNode.classList.add("block");
+                    newNode.classList.add("dg_block");
                     newNode.classList.remove("dg-el-prototype");
                     if (blocks.length === 0) {
                         newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + blocks.length + "'>";
@@ -474,6 +498,7 @@
                 }
             },
             diagram_endDrag = function (event) {
+                remove_parent_selecting();
                 if (event.which != 3 && (dg_active || load_rearrange)) {
                     dragblock = false;
                     blockReleased();
@@ -620,8 +645,10 @@
                     var xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                     var ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
                     var blocko = blocks.map(a => a.id);
+                    remove_parent_selecting();
                     for (var i = 0; i < blocks.length; i++) {
                         if (checkAttach(blocko[i])) {
+                            root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.classList.add("parent-selecting");
                             root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(root_element.querySelector(".indicator"));
                             root_element.querySelector(".indicator").style.left = (root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetWidth / 2) - 5 + "px";
                             root_element.querySelector(".indicator").style.top = root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetHeight + "px";
@@ -635,6 +662,9 @@
                     }
                 }
             },
+            // diagram_update_element = function (old_item, new_item) {
+            //     old_item.parentNode.replaceChild(old_item, new_item);
+            // },
             diagram_load = function () {
                 console.log('diagram_load============================');
 
@@ -643,13 +673,16 @@
                 el.classList.add('invisible');
                 canvas_div.appendChild(el);
 
+
+                canvas_div.addEventListener("dblclick", dg_dblclick);
+
                 root_element.addEventListener("mousedown", diagram_beginDrag);
-                root_element.addEventListener("mousedown", touchblock, false);
+                root_element.addEventListener("mousedown", diagram_touchblock, false);
                 root_element.addEventListener("touchstart", diagram_beginDrag);
-                root_element.addEventListener("touchstart", touchblock, false);
+                root_element.addEventListener("touchstart", diagram_touchblock, false);
 
 
-                root_element.addEventListener("mouseup", touchblock, false);
+                root_element.addEventListener("mouseup", diagram_touchblock, false);
                 root_element.addEventListener("mousemove", diagram_moveBlock, false);
                 root_element.addEventListener("touchmove", diagram_moveBlock, false);
 
@@ -693,14 +726,16 @@
     $.fn.diagrambox.defaults = {
         blocklist_id: 'diagram_blocklist',
         canvas_id: 'diagram_canvas',
-        grab: function () { return true; },
+        grab: function (block) { return true; },
         release: function () { return true; },
-        snapping: function () {
+        snapping: function (drag, first, parent) {
             return true;
         },
-        rearrange: function () {
-            console.log('dg_rearrange========================');
+        rearrange: function (drag, parent) {
             return false;
+        },
+        dblclick_handler: function (block_el, block_type) {
+            return true;
         },
         spacing_x: 20,
         spacing_y: 60,

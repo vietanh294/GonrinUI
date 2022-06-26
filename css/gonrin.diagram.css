@@ -3,17 +3,29 @@
     position: relative !important;
 }
 
-.block {
+.dg_block {
     position: absolute;
     z-index: 9;
 }
 
+.dg_block {
+    background-color: #FFF;
+    margin-top: 0px!important;
+    box-shadow: 0px 4px 30px #16214a0d;
+}
+.parent-selecting {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.25rem #dc354540!important;
+    /* border-color: #198754 !important;
+    box-shadow: 0 0 0 0.25rem rgb(25 135 84 / 25%) !important; */
+}
+
 .indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 60px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
     background-color: #217ce8;
-    margin-top: -5px;
+    margin-top: -6px;
     opacity: 1;
     transition: all 0.3s cubic-bezier(0.05, 0.03, 0.35, 1);
     transform: scale(1);
@@ -29,24 +41,29 @@
 .indicator:after {
     content: "";
     display: block;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     background-color: #217ce8;
-    transform: scale(1.7);
+    transform: scale(1.5);
     opacity: 0.2;
-    border-radius: 60px;
+    border-radius: 50%;
 }
 
 .arrowblock {
     position: absolute;
     width: 100%;
     overflow: visible;
-    pointer-events: none;
+    /* pointer-events: none; */
+}
+.arrowblock:hover {
+    /* background-color: #19875440 !important; */
+    cursor: pointer;
 }
 
 .arrowblock svg {
     width: -webkit-fill-available;
     overflow: visible;
+    pointer-events: none;
 }
 .diagram_container {
     margin: 0px;
@@ -71,7 +88,7 @@
     overflow: auto;
 }
 .diagram_blocklist{
-    height: calc(100vh - 168px);
+    height: calc(100vh - 13rem);
     overflow: auto;
 }
 .blockelem:first-child {
@@ -85,25 +102,21 @@
     transition-duration: .2s;
     transition-timing-function: cubic-bezier(.05,.03,.35,1);
     border-radius: 5px;
-    box-shadow: 0px 0px 30px rgba(22, 33, 74, 0);
+    box-shadow: 0px 0px 30px #16214a00;
     box-sizing: border-box;
 }
 .blockelem:hover {
-    box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.08);
+    box-shadow: 0px 4px 30px #16214a14;
     border-radius: 5px;
     background-color: #FFF;
     cursor: pointer;
 }
 
-.block {
-    background-color: #FFF;
-    margin-top: 0px!important;
-    box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.05);
-}
+
 
 .selectedblock {
     border: 2px solid #217CE8;
-    box-shadow: 0px 4px 30px rgba(22, 33, 74, 0.08);
+    box-shadow: 0px 4px 30px #16214a14;
 }
 
 @media only screen and (max-width: 832px) {
