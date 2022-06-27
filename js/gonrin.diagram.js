@@ -8,7 +8,7 @@
     } else {
         // Neither AMD nor CommonJS used. Use global variables.
         if (typeof jQuery === 'undefined') {
-            throw 'gonrin combobox requires jQuery to be loaded first';
+            throw 'gonrin diagrambox requires jQuery to be loaded first';
         }
         factory(jQuery);
     }
@@ -51,14 +51,15 @@
             beforeDelete = function (drag, parent) {
                 return options.rearrange(drag, parent);
             },
-            dblclick_handler = function (block_el, block_type) {
-                return options.dblclick_handler(block_el, block_type);
+            dblclick_handler = function (event, block_el, block_type) {
+                return options.dblclick_handler(event, block_el, block_type);
             };
 
         if (!Element.prototype.matches) {
             Element.prototype.matches = Element.prototype.msMatchesSelector ||
                 Element.prototype.webkitMatchesSelector;
         }
+
         if (!Element.prototype.closest) {
             Element.prototype.closest = function (s) {
                 var el = this;
@@ -76,11 +77,6 @@
             absx = canvas_div.getBoundingClientRect().left;
             absy = canvas_div.getBoundingClientRect().top;
         }
-        // var bodyRect = document.body.getBoundingClientRect(),
-        // elemRect = element.getBoundingClientRect(),
-        // offset   = elemRect.top - bodyRect.top;
-
-        // alert('Element is ' + offset + ' vertical pixels from <body>');
         var blocks = [],
             blockstemp = [],
             dg_active = false,
@@ -94,13 +90,13 @@
             prevblock = 0,
             drawArrow = function (arrow, x, y, id) {
                 if (x < 0) {
-                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' 0L' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (y - 5) + 'H10L5 ' + y + 'L0 ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
-                    root_element.querySelector('.arrowid[value="' + drag.querySelector(".blockid").value + '"]').parentNode.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.dataset.blockid + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' 0L' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (y - 5) + 'H10L5 ' + y + 'L0 ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
+                    root_element.querySelector('.arrowid[value="' + drag.dataset.blockid + '"]').parentNode.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
                 } else {
-                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (paddingy / 2) + 'L' + (x) + ' ' + (paddingy / 2) + 'L' + x + ' ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (x - 5) + ' ' + (y - 5) + 'H' + (x + 5) + 'L' + x + ' ' + y + 'L' + (x - 5) + ' ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
-                    root_element.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.left = blocks.filter(a => a.id == id)[0].x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.dataset.blockid + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (paddingy / 2) + 'L' + (x) + ' ' + (paddingy / 2) + 'L' + x + ' ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (x - 5) + ' ' + (y - 5) + 'H' + (x + 5) + 'L' + x + ' ' + y + 'L' + (x - 5) + ' ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
+                    root_element.querySelector('.arrowid[value="' + parseInt(drag.dataset.blockid) + '"]').parentNode.style.left = blocks.filter(a => a.id == id)[0].x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
                 }
-                root_element.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.top = blocks.filter(a => a.id == id)[0].y + (blocks.filter(a => a.id == id)[0].height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
+                root_element.querySelector('.arrowid[value="' + parseInt(drag.dataset.blockid) + '"]').parentNode.style.top = blocks.filter(a => a.id == id)[0].y + (blocks.filter(a => a.id == id)[0].height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
             },
             updateArrow = function (arrow, x, y, children) {
                 if (x < 0) {
@@ -114,12 +110,10 @@
             rearrangeMe = function () {
                 var result = blocks.map(a => a.parent);
                 for (var z = 0; z < result.length; z++) {
-                    if (result[z] == -1) {
-                        z++;
-                    }
+                    if (result[z] == -1) { z++; }
                     var totalwidth = 0;
                     var totalremove = 0;
-                    var maxheight = 0;
+                    // var maxheight = 0;
                     for (var w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
                         var children = blocks.filter(id => id.parent == result[z])[w];
                         if (blocks.filter(id => id.parent == children.id).length == 0) {
@@ -144,7 +138,7 @@
                     }
                     for (var w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
                         var children = blocks.filter(id => id.parent == result[z])[w];
-                        const r_block = root_element.querySelector(".blockid[value='" + children.id + "']").parentNode;
+                        const r_block = root_element.querySelector("[data-blockid='" + children.id + "']");
                         const r_array = blocks.filter(id => id.id == result[z]);
                         r_block.style.top = r_array.y + paddingy + canvas_div.getBoundingClientRect().top - absy + "px";
                         r_array.y = r_array.y + paddingy;
@@ -175,7 +169,7 @@
                 if (offsetleft < (canvas_div.getBoundingClientRect().left + window.scrollX - absx)) {
                     var blocko = blocks.map(a => a.id);
                     for (var w = 0; w < blocks.length; w++) {
-                        root_element.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleft + canvas_div.getBoundingClientRect().left - absx + 20 + "px";
+                        root_element.querySelector("[data-blockid='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleft + canvas_div.getBoundingClientRect().left - absx + 20 + "px";
                         if (blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
                             var arrowblock = blocks.filter(a => a.id == blocko[w])[0];
                             var arrowx = arrowblock.x - blocks.filter(a => a.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
@@ -187,7 +181,7 @@
                         }
                     }
                     for (var w = 0; w < blocks.length; w++) {
-                        blocks[w].x = (root_element.querySelector(".blockid[value='" + blocks[w].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (canvas_div.scrollLeft) + (parseInt(window.getComputedStyle(root_element.querySelector(".blockid[value='" + blocks[w].id + "']").parentNode).width) / 2) - 20 - canvas_div.getBoundingClientRect().left;
+                        blocks[w].x = (root_element.querySelector("[data-blockid='" + blocks[w].id + "']").getBoundingClientRect().left + window.scrollX) + (canvas_div.scrollLeft) + (parseInt(window.getComputedStyle(root_element.querySelector("[data-blockid='" + blocks[w].id + "']")).width) / 2) - 20 - canvas_div.getBoundingClientRect().left;
                     }
                 }
             },
@@ -207,6 +201,7 @@
                 }
             },
             removeSelection = function () {
+                console.log('removeSelection=====================================');
                 canvas_div.appendChild(root_element.querySelector(".indicator"));
                 drag.parentNode.removeChild(drag);
             },
@@ -217,10 +212,12 @@
                     drag.style.top = (drag.getBoundingClientRect().top + window.scrollY) - (absy + window.scrollY) + canvas_div.scrollTop + "px";
                     drag.style.left = (drag.getBoundingClientRect().left + window.scrollX) - (absx + window.scrollX) + canvas_div.scrollLeft + "px";
                     canvas_div.appendChild(drag);
+                    let drag_uuid = drag?.dataset?.uuid ?? '';
                     blocks.push({
                         parent: -1,
                         childwidth: 0,
-                        id: parseInt(drag.querySelector(".blockid").value),
+                        id: parseInt(drag.dataset.blockid),
+                        uuid: drag_uuid,
                         x: (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left,
                         y: (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top,
                         width: parseInt(window.getComputedStyle(drag).width),
@@ -230,8 +227,8 @@
                     drag.classList.remove("dragging");
                     load_rearrange = false;
                     for (var w = 0; w < blockstemp.length; w++) {
-                        if (blockstemp[w].id != parseInt(drag.querySelector(".blockid").value)) {
-                            const blockParent = root_element.querySelector(".blockid[value='" + blockstemp[w].id + "']").parentNode;
+                        if (blockstemp[w].id != parseInt(drag.dataset.blockid)) {
+                            const blockParent = root_element.querySelector("[data-blockid='" + blockstemp[w].id + "']");
                             const arrowParent = root_element.querySelector(".arrowid[value='" + blockstemp[w].id + "']").parentNode;
                             blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (window.scrollX) + canvas_div.scrollLeft - 1 - absx + "px";
                             blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (window.scrollY) + canvas_div.scrollTop - absy - 1 + "px";
@@ -252,7 +249,6 @@
             dg_snap = function (drag, i, blocko) {
                 if (!load_rearrange) {
                     canvas_div.appendChild(drag);
-
                 }
                 var totalwidth = 0;
                 var totalremove = 0;
@@ -269,11 +265,11 @@
                 for (var w = 0; w < blocks.filter(id => id.parent == blocko[i]).length; w++) {
                     var children = blocks.filter(id => id.parent == blocko[i])[w];
                     if (children.childwidth > children.width) {
-                        root_element.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) + "px";
+                        root_element.querySelector("[data-blockid='" + children.id + "']").style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) + "px";
                         children.x = blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
                         totalremove += children.childwidth + paddingx;
                     } else {
-                        root_element.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + "px";
+                        root_element.querySelector("[data-blockid='" + children.id + "']").style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + "px";
                         children.x = blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
                         totalremove += children.width + paddingx;
                     }
@@ -281,12 +277,12 @@
                 drag.style.left = blocks.filter(id => id.id == blocko[i])[0].x - (totalwidth / 2) + totalremove - (window.scrollX + absx) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
                 drag.style.top = blocks.filter(id => id.id == blocko[i])[0].y + (blocks.filter(id => id.id == blocko[i])[0].height / 2) + paddingy - (window.scrollY + absy) + canvas_div.getBoundingClientRect().top + "px";
                 if (load_rearrange) {
-                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value))[0].x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
-                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value))[0].y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
-                    blockstemp.filter(a => a.id == drag.querySelector(".blockid").value)[0].parent = blocko[i];
+                    blockstemp.filter(a => a.id == parseInt(drag.dataset.blockid))[0].x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
+                    blockstemp.filter(a => a.id == parseInt(drag.dataset.blockid))[0].y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
+                    blockstemp.filter(a => a.id == drag.dataset.blockid)[0].parent = blocko[i];
                     for (var w = 0; w < blockstemp.length; w++) {
-                        if (blockstemp[w].id != parseInt(drag.querySelector(".blockid").value)) {
-                            const blockParent = root_element.querySelector(".blockid[value='" + blockstemp[w].id + "']").parentNode;
+                        if (blockstemp[w].id != parseInt(drag.dataset.blockid)) {
+                            const blockParent = root_element.querySelector("[data-blockid='" + blockstemp[w].id + "']");
                             const arrowParent = root_element.querySelector(".arrowid[value='" + blockstemp[w].id + "']").parentNode;
                             blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (window.scrollX + canvas_div.getBoundingClientRect().left) + canvas_div.scrollLeft + "px";
                             blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (window.scrollY + canvas_div.getBoundingClientRect().top) + canvas_div.scrollTop + "px";
@@ -302,10 +298,12 @@
                     blocks = blocks.concat(blockstemp);
                     blockstemp = [];
                 } else {
+                    let drag_uuid = drag?.dataset?.uuid ?? '';
                     blocks.push({
                         childwidth: 0,
                         parent: blocko[i],
-                        id: parseInt(drag.querySelector(".blockid").value),
+                        id: parseInt(drag.dataset.blockid),
+                        uuid: drag_uuid,
                         x: (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left,
                         y: (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top,
                         width: parseInt(window.getComputedStyle(drag).width),
@@ -313,7 +311,7 @@
                     });
                 }
 
-                var arrowblock = blocks.filter(a => a.id == parseInt(drag.querySelector(".blockid").value))[0];
+                var arrowblock = blocks.filter(a => a.id == parseInt(drag.dataset.blockid))[0];
                 var arrowx = arrowblock.x - blocks.filter(a => a.id == blocko[i])[0].x + 20;
                 var arrowy = paddingy;
                 drawArrow(arrowblock, arrowx, arrowy, blocko[i]);
@@ -358,11 +356,11 @@
             dg_dblclick = function (event) {
                 let prototype_elem = event.target.closest(".dg_block");
                 if (!!prototype_elem) {
-                    dblclick_handler(prototype_elem, 'dg_block');
+                    dblclick_handler(event, prototype_elem, 'dg_block');
                 } else {
                     let arrow_block_elem = event.target.closest(".arrowblock");
                     if (!!arrow_block_elem) {
-                        dblclick_handler(arrow_block_elem, 'dg_arrowblock');
+                        dblclick_handler(event, arrow_block_elem, 'dg_arrowblock');
                     }
                 }
             },
@@ -400,11 +398,12 @@
             },
             diagram_import = function (output) {
                 canvas_div.innerHTML = output.html;
-                for (var a = 0; a < output.blockarr.length; a++) {
+                for (let a = 0; a < output.blockarr.length; a++) {
                     blocks.push({
                         childwidth: parseFloat(output.blockarr[a].childwidth),
                         parent: parseFloat(output.blockarr[a].parent),
                         id: parseFloat(output.blockarr[a].id),
+                        uuid: output.blockarr[a].uuid,
                         x: parseFloat(output.blockarr[a].x),
                         y: parseFloat(output.blockarr[a].y),
                         width: parseFloat(output.blockarr[a].width),
@@ -431,7 +430,7 @@
                             data: [],
                             attr: []
                         });
-                        var blockParent = root_element.querySelector(".blockid[value='" + blocks[i].id + "']").parentNode;
+                        var blockParent = root_element.querySelector("[data-blockid='" + blocks[i].id + "']");
                         blockParent.querySelectorAll("input").forEach(function (block) {
                             var json_name = block.getAttribute("name");
                             var json_value = block.value;
@@ -450,11 +449,19 @@
                 }
             },
             diagram_toArray = function () {
-                // var html_ser = canvas_div.innerHTML;
-                var json_data = [];
+                return blocks.map(elem => elem.uuid);
+            },
+            dg_parentArray = function () {
+                let dg_array = [];
                 if (blocks.length > 0) {
-
-                    return json_data;
+                    blocks.forEach(element => {
+                        dg_array.push({
+                            uuid: element.uuid,
+                            id: element.id,
+                            parent: element.parent
+                        });
+                    });
+                    return dg_array;
                 }
             },
             diagram_deleteBlocks = function () {
@@ -480,13 +487,16 @@
                     newNode.classList.add("dg_block");
                     newNode.classList.remove("dg-el-prototype");
                     if (blocks.length === 0) {
-                        newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + blocks.length + "'>";
+                        newNode.dataset.blockid = blocks.length;
                         root_element.appendChild(newNode);
-                        drag = root_element.querySelector(".blockid[value='" + blocks.length + "']").parentNode;
+                        drag = root_element.querySelector("[data-blockid='" + blocks.length + "']");
+
                     } else {
-                        newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, blocks.map(a => a.id)) + 1) + "'>";
+                        newNode.dataset.blockid = (Math.max.apply(Math, blocks.map(a => a.id)) + 1);
                         root_element.appendChild(newNode);
-                        drag = root_element.querySelector(".blockid[value='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']").parentNode;
+                        drag = root_element.querySelector("[data-blockid='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']");
+
+
                     }
                     blockGrabbed(event.target.closest(".dg-el-prototype"));
                     drag.classList.add("dragging");
@@ -509,7 +519,7 @@
                         original.classList.remove("dragnow");
                         drag.classList.remove("dragging");
                     }
-                    if (parseInt(drag.querySelector(".blockid").value) === 0 && load_rearrange) {
+                    if (parseInt(drag.dataset.blockid) === 0 && load_rearrange) {
                         firstBlock("rearrange")
                     } else if (dg_active && blocks.length == 0 && (drag.getBoundingClientRect().top + window.scrollY) > (canvas_div.getBoundingClientRect().top + window.scrollY) && (drag.getBoundingClientRect().left + window.scrollX) > (canvas_div.getBoundingClientRect().left + window.scrollX)) {
                         firstBlock("drop");
@@ -520,7 +530,7 @@
                         for (var i = 0; i < blocks.length; i++) {
                             if (checkAttach(blocko[i])) {
                                 dg_active = false;
-                                if (blockSnap(drag, false, root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode)) {
+                                if (blockSnap(drag, false, root_element.querySelector("[data-blockid='" + blocko[i] + "']"))) {
                                     dg_snap(drag, i, blocko);
                                 } else {
                                     dg_active = false;
@@ -570,7 +580,7 @@
                 if (dragblock) {
                     load_rearrange = true;
                     drag.classList.add("dragging");
-                    var blockid = parseInt(drag.querySelector(".blockid").value);
+                    var blockid = parseInt(drag.dataset.blockid);
                     prevblock = blocks.filter(a => a.id == blockid)[0].parent;
                     blockstemp.push(blocks.filter(a => a.id == blockid)[0]);
                     blocks = blocks.filter(function (e) {
@@ -587,7 +597,7 @@
                         for (var i = 0; i < layer.length; i++) {
                             if (layer[i] != blockid) {
                                 blockstemp.push(blocks.filter(a => a.id == layer[i].id)[0]);
-                                const blockParent = root_element.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
+                                const blockParent = root_element.querySelector("[data-blockid='" + layer[i].id + "']");
                                 const arrowParent = root_element.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
                                 blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX) + "px";
                                 blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY) + "px";
@@ -629,8 +639,8 @@
                 } else if (load_rearrange) {
                     drag.style.left = mouse_x - dragx - (window.scrollX + absx) + canvas_div.scrollLeft + "px";
                     drag.style.top = mouse_y - dragy - (window.scrollY + absy) + canvas_div.scrollTop + "px";
-                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value)).x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
-                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value)).y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
+                    blockstemp.filter(a => a.id == parseInt(drag.dataset.blockid)).x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
+                    blockstemp.filter(a => a.id == parseInt(drag.dataset.blockid)).y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
                 }
                 if (dg_active || load_rearrange) {
                     if (mouse_x > canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left - 10 && mouse_x < canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left + 10) {
@@ -648,10 +658,10 @@
                     remove_parent_selecting();
                     for (var i = 0; i < blocks.length; i++) {
                         if (checkAttach(blocko[i])) {
-                            root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.classList.add("parent-selecting");
-                            root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(root_element.querySelector(".indicator"));
-                            root_element.querySelector(".indicator").style.left = (root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetWidth / 2) - 5 + "px";
-                            root_element.querySelector(".indicator").style.top = root_element.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetHeight + "px";
+                            root_element.querySelector("[data-blockid='" + blocko[i] + "']").classList.add("parent-selecting");
+                            root_element.querySelector("[data-blockid='" + blocko[i] + "']").appendChild(root_element.querySelector(".indicator"));
+                            root_element.querySelector(".indicator").style.left = (root_element.querySelector("[data-blockid='" + blocko[i] + "']").offsetWidth / 2) - 5 + "px";
+                            root_element.querySelector(".indicator").style.top = root_element.querySelector("[data-blockid='" + blocko[i] + "']").offsetHeight + "px";
                             root_element.querySelector(".indicator").classList.remove("invisible");
                             break;
                         } else if (i == blocks.length - 1) {
@@ -662,9 +672,25 @@
                     }
                 }
             },
-            // diagram_update_element = function (old_item, new_item) {
-            //     old_item.parentNode.replaceChild(old_item, new_item);
-            // },
+            dg_update_element = function (item, attrs = {}, inner_html) {
+                if (!(item instanceof HTMLElement)) {
+                    console.log('item is NOT instanceof HTMLElement');
+                    return false;
+                }
+                if (!(attrs instanceof Object)) {
+                    console.log('attrs is NOT instanceof Object');
+                    return false;
+                }
+                for (const key in attrs) {
+                    if (Object.hasOwnProperty.call(attrs, key)) {
+                        item.setAttribute(key, attrs[key]);
+                    }
+                }
+                if (inner_html) {
+                    item.innerHTML = inner_html;
+                }
+                return true;
+            },
             diagram_load = function () {
                 console.log('diagram_load============================');
 
@@ -700,7 +726,8 @@
         grobject.diagram_load = diagram_load;
         grobject.init_children = init_children;
         grobject.diagram_toArray = diagram_toArray;
-
+        grobject.dg_parentArray = dg_parentArray;
+        grobject.dg_update_element = dg_update_element;
 
 
         return grobject;
@@ -734,7 +761,7 @@
         rearrange: function (drag, parent) {
             return false;
         },
-        dblclick_handler: function (block_el, block_type) {
+        dblclick_handler: function (event, block_el, block_type) {
             return true;
         },
         spacing_x: 20,
