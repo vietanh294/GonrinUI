@@ -445,8 +445,8 @@
                             json_data.blocks[i].attr.push(jsonobj);
                         });
                     }
-                    return json_data;
                 }
+                return json_data;
             },
             diagram_toArray = function () {
                 return blocks.map(elem => elem.uuid);
