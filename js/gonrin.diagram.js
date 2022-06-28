@@ -681,9 +681,26 @@
                     console.log('attrs is NOT instanceof Object');
                     return false;
                 }
+                let temp_block_id = item.dataset.blockid;
+                if (temp_block_id == undefined && temp_block_id == null) {
+                    console.log('block_id is NOT exist');
+                    return false;
+                }
                 for (const key in attrs) {
+                    if (key == 'data-blockid') {
+                        console.log('data-blockid can NOT change');
+                        continue;
+                    }
                     if (Object.hasOwnProperty.call(attrs, key)) {
                         item.setAttribute(key, attrs[key]);
+                        if (key == 'data-uuid') {
+                            blocks.forEach(element => {
+                                if (element.id == temp_block_id) {
+                                    element.uuid = attrs[key];
+                                }
+                            });
+                            console.log('data-uuid was changed', blocks);
+                        }
                     }
                 }
                 if (inner_html) {
