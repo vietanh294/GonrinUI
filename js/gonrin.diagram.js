@@ -88,6 +88,7 @@
             mouse_x, mouse_y,
             dragblock = false,
             prevblock = 0,
+            mouseDownTimer = Date.now(),
             drawArrow = function (arrow, x, y, id) {
                 if (x < 0) {
                     canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.dataset.blockid + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' 0L' + (blocks.filter(a => a.id == id)[0].x - arrow.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + y + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (y - 5) + 'H10L5 ' + y + 'L0 ' + (y - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
@@ -354,14 +355,18 @@
                 checkOffset();
             },
             dg_dblclick = function (event) {
-                let prototype_elem = event.target.closest(".dg_block");
-                if (!!prototype_elem) {
-                    dblclick_handler(event, prototype_elem, 'dg_block');
+                let dg_block_elem = event.target.closest(".dg_block");
+                if (!!dg_block_elem) {
+                    dblclick_handler(event, dg_block_elem, 'dg_block');
                 } else {
                     let arrow_block_elem = event.target.closest(".arrowblock");
                     if (!!arrow_block_elem) {
                         dblclick_handler(event, arrow_block_elem, 'dg_arrowblock');
                     }
+                }
+                let prototype_elem = event.target.closest(".dg-el-prototype");
+                if (!!prototype_elem) {
+                    dblclick_handler(event, prototype_elem, 'dg_el_prototype');
                 }
             },
             diagram_touchblock = function (event) {
@@ -469,6 +474,7 @@
                 canvas_div.innerHTML = "<div class='indicator invisible'></div>";
             },
             diagram_beginDrag = function (event) {
+                let timestamp_now = Date.now();
                 if (window.getComputedStyle(canvas_div).position == "absolute" || window.getComputedStyle(canvas_div).position == "fixed") {
                     absx = canvas_div.getBoundingClientRect().left;
                     absy = canvas_div.getBoundingClientRect().top;
@@ -480,7 +486,8 @@
                     mouse_x = event.clientX;
                     mouse_y = event.clientY;
                 }
-                if (event.which != 3 && event.target.closest(".dg-el-prototype")) {
+                if (event.which != 3 && (timestamp_now - mouseDownTimer > options.dblClickTimeSpan)
+                    && event.target.closest(".dg-el-prototype")) {
                     original = event.target.closest(".dg-el-prototype");
                     var newNode = event.target.closest(".dg-el-prototype").cloneNode(true);
                     event.target.closest(".dg-el-prototype").classList.add("dragnow");
@@ -495,8 +502,6 @@
                         newNode.dataset.blockid = (Math.max.apply(Math, blocks.map(a => a.id)) + 1);
                         root_element.appendChild(newNode);
                         drag = root_element.querySelector("[data-blockid='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']");
-
-
                     }
                     blockGrabbed(event.target.closest(".dg-el-prototype"));
                     drag.classList.add("dragging");
@@ -505,6 +510,9 @@
                     dragy = mouse_y - (event.target.closest(".dg-el-prototype").getBoundingClientRect().top);
                     drag.style.left = mouse_x - dragx + "px";
                     drag.style.top = mouse_y - dragy + "px";
+                }
+                if (event.type === 'mousedown') {
+                    mouseDownTimer = Date.now();
                 }
             },
             diagram_endDrag = function (event) {
@@ -717,7 +725,7 @@
                 canvas_div.appendChild(el);
 
 
-                canvas_div.addEventListener("dblclick", dg_dblclick);
+                root_element.addEventListener("dblclick", dg_dblclick);
 
                 root_element.addEventListener("mousedown", diagram_beginDrag);
                 root_element.addEventListener("mousedown", diagram_touchblock, false);
@@ -784,6 +792,7 @@
         spacing_x: 20,
         spacing_y: 60,
         type: null,
+        dblClickTimeSpan: 300,
         /*autobind: Controls whether to bind the widget to the data source on initialization.*/
         autobind: true
     };
