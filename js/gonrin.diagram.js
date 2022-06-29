@@ -461,8 +461,8 @@
                             parent: element.parent
                         });
                     });
-                    return dg_array;
                 }
+                return dg_array;
             },
             diagram_deleteBlocks = function () {
                 blocks = [];
