@@ -792,7 +792,7 @@
         spacing_x: 20,
         spacing_y: 60,
         type: null,
-        dblClickTimeSpan: 1000,
+        dblClickTimeSpan: 600,
         /*autobind: Controls whether to bind the widget to the data source on initialization.*/
         autobind: true
     };
