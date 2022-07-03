@@ -45,6 +45,9 @@
             blockReleased = function () {
                 options.release();
             },
+            processComplete = function () {
+                options.processComplete();
+            },
             blockSnap = function (drag, first, parent) {
                 return options.snapping(drag, first, parent);
             },
@@ -574,6 +577,7 @@
                             }
                         }
                     }
+                    processComplete();
                 }
             },
             diagram_moveBlock = function (event) {
@@ -780,6 +784,9 @@
         canvas_id: 'diagram_canvas',
         grab: function (block) { return true; },
         release: function () { return true; },
+        processComplete: function () {
+            return true;
+        },
         snapping: function (drag, first, parent) {
             return true;
         },
