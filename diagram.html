@@ -60,7 +60,7 @@
 
 
 <body>
-    
+
 
     <div class="diagram_container" id="diagram_container">
         <div id="leftcard">
@@ -84,10 +84,10 @@
                 <div id="done-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="3">Done</div>
             </div>
             <div id="diagram_blocklist">
-                <div class="blockelem create-flowy noselect">
+                <div class="blockelem create-flowy noselect dg-bg-card"
+                    style="background-color: rgba(255, 165, 0, 0.573) !important;">
                     <input type="hidden" name='blockelemtype' class="blockelemtype" value="1">
                     <div class="grabme">
-                        
                         <img src="vendor/diagram/assets/grabme.svg">
                     </div>
                     <div class="blockin">
@@ -95,13 +95,14 @@
                             <span></span>
                             <img src="vendor/diagram/assets/eye.svg">
                         </div>
-                        <div class="blocktext">
-                            <p class="blocktitle">New visitor</p>
-                            <p class="blockdesc">Triggers when somebody visits a specified page</p>
+                        <div class="blocktext ">
+                            <p class="blocktitle">Thẻ 1</p>
+                            <p class="blockdesc">Nội dung thẻ 1</p>
                         </div>
                     </div>
                 </div>
-                <div class="blockelem create-flowy noselect">
+                <div class="blockelem create-flowy noselect dg-bg-card"
+                    style="background-color: rgba(54, 233, 218, 0.573) !important;">
                     <input type="hidden" name='blockelemtype' class="blockelemtype" value="2">
                     <div class="grabme">
                         <img src="vendor/diagram/assets/grabme.svg">
@@ -111,13 +112,29 @@
                             <span></span>
                             <img src="vendor/diagram/assets/action.svg">
                         </div>
-                        <div class="blocktext">
-                            <p class="blocktitle">Action is performed</p>
-                            <p class="blockdesc">Triggers when somebody performs a specified action</p>
+                        <div class="blocktext ">
+                            <p class="blocktitle">Thẻ 2</p>
+                            <p class="blockdesc">Nội dung thẻ 2</p>
                         </div>
                     </div>
                 </div>
-
+                <div class="blockelem create-flowy noselect dg-bg-card"
+                    style="background-color: rgba(150, 234, 240, 0.573) !important;">
+                    <input type="hidden" name='blockelemtype' class="blockelemtype" value="1">
+                    <div class="grabme">
+                        <img src="vendor/diagram/assets/grabme.svg">
+                    </div>
+                    <div class="blockin">
+                        <div class="blockico">
+                            <span></span>
+                            <img src="vendor/diagram/assets/eye.svg">
+                        </div>
+                        <div class="blocktext ">
+                            <p class="blocktitle">Thẻ 3</p>
+                            <p class="blockdesc">Nội dung thẻ 3</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -135,43 +152,87 @@
 
         $('#diagram_import').unbind("click").bind("click", function () {
             let data = {
-                "html": "\n        <div class=\"blockelem noselect block\" style=\"left: 357px; top: 113.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"0\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/eyeblue.svg\"><p class=\"blockyname\">New visitor</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When a <span>new visitor</span> goes to <span>Site 1</span></div><div class=\"indicator invisible\" style=\"left: 154px; top: 110px;\"></div></div><div class=\"blockelem noselect block\" style=\"left: 20px; top: 302.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"1\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/actionblue.svg\"><p class=\"blockyname\">Action is performed</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When <span>Action 1</span> is performed</div></div><div class=\"arrowblock\" style=\"left: 173.5px; top: 222.949px;\"><input type=\"hidden\" class=\"arrowid\" value=\"1\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M342 0L342 40L5 40L5 80\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M0 75H10L5 80L0 75Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem noselect block\" style=\"left: 357px; top: 302.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"2\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/eyeblue.svg\"><p class=\"blockyname\">New visitor</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When a <span>new visitor</span> goes to <span>Site 1</span></div></div><div class=\"arrowblock\" style=\"left: 495.5px; top: 222.949px;\"><input type=\"hidden\" class=\"arrowid\" value=\"2\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 40L20 40L20 80\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 75H25L20 80L15 75Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem noselect block\" style=\"left: 694px; top: 302.949px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    \n                    \n                <input type=\"hidden\" name=\"blockid\" class=\"blockid\" value=\"3\"><div class=\"blockyleft\"><img src=\"vendor/diagram/assets/eyeblue.svg\"><p class=\"blockyname\">New visitor</p></div><div class=\"blockyright\"><img src=\"vendor/diagram/assets/more.svg\"></div><div class=\"blockydiv\"></div><div class=\"blockyinfo\">When a <span>new visitor</span> goes to <span>Site 1</span></div></div><div class=\"arrowblock\" style=\"left: 495.5px; top: 222.949px;\"><input type=\"hidden\" class=\"arrowid\" value=\"3\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 40L357 40L357 80\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M352 75H362L357 80L352 75Z\" fill=\"#C5CCD0\"></path></svg></div>",
+                "html": "\n        <div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 364px; top: -2px; background-color: rgba(255, 165, 0, 0.573) !important;\" data-blockid=\"0\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 1</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 1</p>\n                        </div>\n                    </div>\n                </div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 26px; top: 136px; background-color: rgba(54, 233, 218, 0.573) !important;\" data-blockid=\"1\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/action.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 2</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 2</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 180px; top: 76px;\"><input type=\"hidden\" class=\"arrowid\" value=\"1\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M343 0L343 30L5 30L5 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M0 55H10L5 60L0 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 533px; top: 136px; background-color: rgba(150, 234, 240, 0.573) !important;\" data-blockid=\"2\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 3</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 3</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 503px; top: 76px;\"><input type=\"hidden\" class=\"arrowid\" value=\"2\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L189 30L189 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M184 55H194L189 60L184 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 26px; top: 274px; background-color: rgba(255, 165, 0, 0.573) !important;\" data-blockid=\"3\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 1</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 1</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 165px; top: 214px;\"><input type=\"hidden\" class=\"arrowid\" value=\"3\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 364px; top: 274px; background-color: rgba(255, 165, 0, 0.573) !important;\" data-blockid=\"4\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 1</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 1</p>\n                        </div>\n                    </div>\n                <div class=\"indicator invisible\" style=\"left: 154px; top: 78px;\"></div></div><div class=\"arrowblock\" style=\"left: 518px; top: 214px;\"><input type=\"hidden\" class=\"arrowid\" value=\"4\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M174 0L174 30L5 30L5 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M0 55H10L5 60L0 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 702px; top: 274px; background-color: rgba(54, 233, 218, 0.573) !important;\" data-blockid=\"5\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/action.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 2</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 2</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 672px; top: 214px;\"><input type=\"hidden\" class=\"arrowid\" value=\"5\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L189 30L189 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M184 55H194L189 60L184 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 26px; top: 412px; background-color: rgba(150, 234, 240, 0.573) !important;\" data-blockid=\"6\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 3</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 3</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 165px; top: 352px;\"><input type=\"hidden\" class=\"arrowid\" value=\"6\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg-bg-card dg_block\" style=\"left: 364px; top: 411px; background-color: rgba(150, 234, 240, 0.573) !important;\" data-blockid=\"7\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext \">\n                            <p class=\"blocktitle\">Thẻ 3</p>\n                            <p class=\"blockdesc\">Nội dung thẻ 3</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 503px; top: 351px;\"><input type=\"hidden\" class=\"arrowid\" value=\"7\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div>",
                 "blockarr": [
                     {
                         "parent": -1,
-                        "childwidth": 991,
+                        "childwidth": 994,
                         "id": 0,
-                        "x": 495.4886169433594,
-                        "y": 168.44886016845703,
-                        "width": 317,
-                        "height": 109
+                        "uuid": "",
+                        "x": 523,
+                        "y": 37,
+                        "width": 318,
+                        "height": 78
                     },
                     {
-                        "childwidth": 0,
+                        "childwidth": 318,
                         "parent": 0,
                         "id": 1,
-                        "x": 158.5,
-                        "y": 357.44031524658203,
-                        "width": 317,
-                        "height": 109
+                        "uuid": "",
+                        "x": 184,
+                        "y": 174,
+                        "width": 318,
+                        "height": 78
                     },
                     {
-                        "childwidth": 0,
+                        "childwidth": 656,
                         "parent": 0,
                         "id": 2,
-                        "x": 495.4886169433594,
-                        "y": 357.44031524658203,
-                        "width": 317,
-                        "height": 109
+                        "uuid": "",
+                        "x": 691,
+                        "y": 174,
+                        "width": 318,
+                        "height": 78
+                    },
+                    {
+                        "childwidth": 318,
+                        "parent": 1,
+                        "id": 3,
+                        "uuid": "",
+                        "x": 184,
+                        "y": 312,
+                        "width": 318,
+                        "height": 78
+                    },
+                    {
+                        "childwidth": 318,
+                        "parent": 2,
+                        "id": 4,
+                        "uuid": "",
+                        "x": 522,
+                        "y": 312,
+                        "width": 318,
+                        "height": 78
                     },
                     {
                         "childwidth": 0,
-                        "parent": 0,
-                        "id": 3,
-                        "x": 832.4914245605469,
-                        "y": 357.44031524658203,
-                        "width": 317,
-                        "height": 109
+                        "parent": 2,
+                        "id": 5,
+                        "uuid": "",
+                        "x": 860,
+                        "y": 312,
+                        "width": 318,
+                        "height": 78
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 3,
+                        "id": 6,
+                        "uuid": "",
+                        "x": 184,
+                        "y": 450,
+                        "width": 318,
+                        "height": 78
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 4,
+                        "id": 7,
+                        "uuid": "",
+                        "x": 522,
+                        "y": 449,
+                        "width": 318,
+                        "height": 78
                     }
                 ],
                 "blocks": [
@@ -182,18 +243,17 @@
                             {
                                 "name": "blockelemtype",
                                 "value": "1"
-                            },
-                            {
-                                "name": "blockid",
-                                "value": "0"
                             }
                         ],
                         "attr": [
                             {
-                                "class": "blockelem noselect block"
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
                             },
                             {
-                                "style": "left: 357px; top: 113.949px;"
+                                "style": "left: 364px; top: -2px; background-color: rgba(255, 165, 0, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "0"
                             }
                         ]
                     },
@@ -204,18 +264,17 @@
                             {
                                 "name": "blockelemtype",
                                 "value": "2"
-                            },
-                            {
-                                "name": "blockid",
-                                "value": "1"
                             }
                         ],
                         "attr": [
                             {
-                                "class": "blockelem noselect block"
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
                             },
                             {
-                                "style": "left: 20px; top: 302.949px;"
+                                "style": "left: 26px; top: 136px; background-color: rgba(54, 233, 218, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "1"
                             }
                         ]
                     },
@@ -226,40 +285,122 @@
                             {
                                 "name": "blockelemtype",
                                 "value": "1"
-                            },
-                            {
-                                "name": "blockid",
-                                "value": "2"
                             }
                         ],
                         "attr": [
                             {
-                                "class": "blockelem noselect block"
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
                             },
                             {
-                                "style": "left: 357px; top: 302.949px;"
+                                "style": "left: 533px; top: 136px; background-color: rgba(150, 234, 240, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "2"
                             }
                         ]
                     },
                     {
                         "id": 3,
-                        "parent": 0,
+                        "parent": 1,
                         "data": [
                             {
                                 "name": "blockelemtype",
                                 "value": "1"
-                            },
-                            {
-                                "name": "blockid",
-                                "value": "3"
                             }
                         ],
                         "attr": [
                             {
-                                "class": "blockelem noselect block"
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
                             },
                             {
-                                "style": "left: 694px; top: 302.949px;"
+                                "style": "left: 26px; top: 274px; background-color: rgba(255, 165, 0, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "3"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "parent": 2,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
+                            },
+                            {
+                                "style": "left: 364px; top: 274px; background-color: rgba(255, 165, 0, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "4"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "parent": 2,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "2"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
+                            },
+                            {
+                                "style": "left: 702px; top: 274px; background-color: rgba(54, 233, 218, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "5"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "parent": 3,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
+                            },
+                            {
+                                "style": "left: 26px; top: 412px; background-color: rgba(150, 234, 240, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "6"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "parent": 4,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg-bg-card dg_block"
+                            },
+                            {
+                                "style": "left: 364px; top: 411px; background-color: rgba(150, 234, 240, 0.573) !important;"
+                            },
+                            {
+                                "data-blockid": "7"
                             }
                         ]
                     }

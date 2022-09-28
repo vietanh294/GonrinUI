@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Primary Meta Tags -->
+    <title>Diagram- The simple flowchart engine</title>
+    <meta name="title" content="Flowy - The simple flowchart engine">
+    <meta name="description"
+        content="Flowy is a minimal javascript library to create flowcharts. Use it for automation software, mind mapping tools, programming platforms, and more. Made by Alyssa X.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alyssax.com/x/flowy">
+    <meta property="og:title" content="Flowy - The simple flowchart engine">
+    <meta property="og:description"
+        content="Flowy is a minimal javascript library to create flowcharts. Use it for automation software, mind mapping tools, programming platforms, and more. Made by Alyssa X.">
+    <meta property="og:image" content="https://alyssax.com/x/vendor/diagram/assets/meta.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://alyssax.com/x/flowy">
+    <meta property="twitter:site" content="alyssaxuu">
+    <meta property="twitter:title" content="Flowy - The simple flowchart engine">
+    <meta property="twitter:description"
+        content="Flowy is a minimal javascript library to create flowcharts. Use it for automation software, mind mapping tools, programming platforms, and more. Made by Alyssa X.">
+    <meta property="twitter:image" content="https://alyssax.com/x/vendor/diagram/assets/meta.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/gonrin.diagram.css">
+    <link rel="stylesheet" href="vendor/diagram/diagram.css">
+
+    <script src="js/gonrin.core.js"></script>
+    <script src="js/gonrin.diagram.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#diagram_container').diagrambox({});
+        });
+    </script>
+
+</head>
+
+
+<body>
+
+
+    <div class="diagram_container" id="diagram_container">
+        <div id="leftcard">
+            <div class="d-flex justify-contents-start">
+                <button class="btn btn-danger" id="output_diagram">output</button>
+                <button class="btn btn-success" id="diagram_deleteBlocks">delete_blocks</button>
+                <button class="btn btn-info" id="diagram_import">diagram_import</button>
+            </div>
+            <div id="closecard">
+                <img src="vendor/diagram/assets/closeleft.svg">
+            </div>
+            <div id="search">
+                <img src="vendor/diagram/assets/search.svg">
+                <input type="text" placeholder="Search blocks">
+            </div>
+            <div id="subnav">
+                <div id="all-task" class="navactive dg-nav-item" data-click="nav-item">All</div>
+                <div id="to-do-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="1">To Do</div>
+                <div id="in-progress-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="2">
+                    Progress</div>
+                <div id="done-tasks" class="navdisabled dg-nav-item" data-click="nav-item" data-value="3">Done</div>
+            </div>
+            <div id="diagram_blocklist">
+                <div class="blockelem create-flowy noselect">
+                    <input type="hidden" name='blockelemtype' class="blockelemtype" value="1">
+                    <div class="grabme">
+
+                        <img src="vendor/diagram/assets/grabme.svg">
+                    </div>
+                    <div class="blockin">
+                        <div class="blockico">
+                            <span></span>
+                            <img src="vendor/diagram/assets/eye.svg">
+                        </div>
+                        <div class="blocktext">
+                            <p class="blocktitle">New visitor</p>
+                            <p class="blockdesc">Triggers when somebody visits a specified page</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="blockelem create-flowy noselect">
+                    <input type="hidden" name='blockelemtype' class="blockelemtype" value="2">
+                    <div class="grabme">
+                        <img src="vendor/diagram/assets/grabme.svg">
+                    </div>
+                    <div class="blockin">
+                        <div class="blockico">
+                            <span></span>
+                            <img src="vendor/diagram/assets/action.svg">
+                        </div>
+                        <div class="blocktext">
+                            <p class="blocktitle">Action is performed</p>
+                            <p class="blockdesc">Triggers when somebody performs a specified action</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div id="diagram_canvas">
+        </div>
+    </div>
+    <script>
+        $('#output_diagram').on('click', function (e) {
+            console.log('diagram_output==========================',
+                $('#diagram_container').data('gonrin').diagram_output());
+        });
+        $('#diagram_deleteBlocks').unbind("click").bind("click", function () {
+            $('#diagram_container').data('gonrin').diagram_deleteBlocks()
+        });
+
+        $('#diagram_import').unbind("click").bind("click", function () {
+            let data = {
+                "html": "<div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"0\" style=\"left: 509px; top: -15px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        \n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">New visitor</p>\n                            <p class=\"blockdesc\">Triggers when somebody visits a specified page</p>\n                        </div>\n                    </div>\n                </div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"1\" style=\"left: 2px; top: 144px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        \n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">New visitor</p>\n                            <p class=\"blockdesc\">Triggers when somebody visits a specified page</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 156px; top: 84px;\"><input type=\"hidden\" class=\"arrowid\" value=\"1\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M512 0L512 30L5 30L5 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M0 55H10L5 60L0 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"3\" style=\"left: 340px; top: 144px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        \n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">New visitor</p>\n                            <p class=\"blockdesc\">Triggers when somebody visits a specified page</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 494px; top: 84px;\"><input type=\"hidden\" class=\"arrowid\" value=\"3\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M174 0L174 30L5 30L5 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M0 55H10L5 60L0 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"4\" style=\"left: 678px; top: 144px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        \n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">New visitor</p>\n                            <p class=\"blockdesc\">Triggers when somebody visits a specified page</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 648px; top: 84px;\"><input type=\"hidden\" class=\"arrowid\" value=\"4\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L189 30L189 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M184 55H194L189 60L184 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"5\" style=\"left: 1016px; top: 144px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        \n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">New visitor</p>\n                            <p class=\"blockdesc\">Triggers when somebody visits a specified page</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 648px; top: 84px;\"><input type=\"hidden\" class=\"arrowid\" value=\"5\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L527 30L527 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M522 55H532L527 60L522 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"2\" style=\"left: 2px; top: 303px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/action.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">Action is performed</p>\n                            <p class=\"blockdesc\">Triggers when somebody performs a specified action</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 141px; top: 243px;\"><input type=\"hidden\" class=\"arrowid\" value=\"2\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"6\" style=\"left: 340px; top: 302px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/action.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">Action is performed</p>\n                            <p class=\"blockdesc\">Triggers when somebody performs a specified action</p>\n                        </div>\n                    </div>\n                <div class=\"indicator invisible\" style=\"left: 154px; top: 99px;\"></div></div><div class=\"arrowblock\" style=\"left: 479px; top: 242px;\"><input type=\"hidden\" class=\"arrowid\" value=\"6\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"7\" style=\"left: 678px; top: 302px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"2\">\n                    <div class=\"grabme\">\n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/action.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">Action is performed</p>\n                            <p class=\"blockdesc\">Triggers when somebody performs a specified action</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 817px; top: 242px;\"><input type=\"hidden\" class=\"arrowid\" value=\"7\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div><div class=\"blockelem create-flowy noselect dg_block\" data-blockid=\"8\" style=\"left: 340px; top: 460px;\">\n                    <input type=\"hidden\" name=\"blockelemtype\" class=\"blockelemtype\" value=\"1\">\n                    <div class=\"grabme\">\n                        \n                        <img src=\"vendor/diagram/assets/grabme.svg\">\n                    </div>\n                    <div class=\"blockin\">\n                        <div class=\"blockico\">\n                            <span></span>\n                            <img src=\"vendor/diagram/assets/eye.svg\">\n                        </div>\n                        <div class=\"blocktext\">\n                            <p class=\"blocktitle\">New visitor</p>\n                            <p class=\"blockdesc\">Triggers when somebody visits a specified page</p>\n                        </div>\n                    </div>\n                </div><div class=\"arrowblock\" style=\"left: 479px; top: 400px;\"><input type=\"hidden\" class=\"arrowid\" value=\"8\"><svg preserveAspectRatio=\"none\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20 0L20 30L20 30L20 60\" stroke=\"#C5CCD0\" stroke-width=\"2px\"></path><path d=\"M15 55H25L20 60L15 55Z\" fill=\"#C5CCD0\"></path></svg></div>",
+                "blockarr": [
+                    {
+                        "parent": -1,
+                        "childwidth": 1332,
+                        "id": 0,
+                        "uuid": "",
+                        "x": 668,
+                        "y": 34.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 318,
+                        "parent": 0,
+                        "id": 1,
+                        "uuid": "",
+                        "x": 160,
+                        "y": 192.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 318,
+                        "parent": 0,
+                        "id": 3,
+                        "uuid": "",
+                        "x": 498,
+                        "y": 192.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 318,
+                        "parent": 0,
+                        "id": 4,
+                        "uuid": "",
+                        "x": 836,
+                        "y": 192.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 0,
+                        "id": 5,
+                        "uuid": "",
+                        "x": 1174,
+                        "y": 192.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 1,
+                        "id": 2,
+                        "uuid": "",
+                        "x": 160,
+                        "y": 351.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 318,
+                        "parent": 3,
+                        "id": 6,
+                        "uuid": "",
+                        "x": 498,
+                        "y": 350.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 4,
+                        "id": 7,
+                        "uuid": "",
+                        "x": 836,
+                        "y": 350.5,
+                        "width": 318,
+                        "height": 99
+                    },
+                    {
+                        "childwidth": 0,
+                        "parent": 6,
+                        "id": 8,
+                        "uuid": "",
+                        "x": 498,
+                        "y": 508.5,
+                        "width": 318,
+                        "height": 99
+                    }
+                ],
+                "blocks": [
+                    {
+                        "id": 0,
+                        "parent": -1,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "0"
+                            },
+                            {
+                                "style": "left: 509px; top: -15px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 1,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "1"
+                            },
+                            {
+                                "style": "left: 2px; top: 144px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "3"
+                            },
+                            {
+                                "style": "left: 340px; top: 144px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "4"
+                            },
+                            {
+                                "style": "left: 678px; top: 144px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "parent": 0,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "5"
+                            },
+                            {
+                                "style": "left: 1016px; top: 144px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "parent": 1,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "2"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "2"
+                            },
+                            {
+                                "style": "left: 2px; top: 303px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "parent": 3,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "2"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "6"
+                            },
+                            {
+                                "style": "left: 340px; top: 302px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "parent": 4,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "2"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "7"
+                            },
+                            {
+                                "style": "left: 678px; top: 302px;"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "parent": 6,
+                        "data": [
+                            {
+                                "name": "blockelemtype",
+                                "value": "1"
+                            }
+                        ],
+                        "attr": [
+                            {
+                                "class": "blockelem create-flowy noselect dg_block"
+                            },
+                            {
+                                "data-blockid": "8"
+                            },
+                            {
+                                "style": "left: 340px; top: 460px;"
+                            }
+                        ]
+                    }
+                ]
+            };
+            $('#diagram_container').data('gonrin').diagram_import(data)
+        });
+        // diagram_import
+    </script>
+</body>
+
+</html>
