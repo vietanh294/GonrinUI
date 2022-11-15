@@ -13,7 +13,7 @@ class Gantt {
         this.tooltipAlias = options.tooltipAlias || 'tooltip';
         this.groupBy = options.groupBy ? options.groupBy.split(',').map(group => group.trim()) : [];
         this.groupByAlias = this.groupBy ? (options.groupByAlias ? options.groupByAlias.split(',').map(group => group.trim()) : this.groupBy) : [];
-        console.log("this.groupBy", this.groupBy, this.groupByAlias);
+
         this.chartType = options.chartType || "month";
         this.translateLang = options.translateLang || {
             "hour": "Giờ", "day": "Ngày", "week": "Tuần", "month": "Tháng", "quarter": "Quý", "year": "Năm"
@@ -57,7 +57,6 @@ class Gantt {
         }
 
         this.data = groupedData;
-        console.log("this.data=====================", this.rawData, sortedData, this.data);
 
         //Get the max and min datetimes in the dataset
         //Used to determine the first and last times that are shown in the chart
@@ -92,13 +91,11 @@ class Gantt {
             return;
         }
 
-        console.log("result============", result, entry, iter);
         let groupingProperty = result[entry[this.groupBy[iter]]];
         let chartEntry = result[entry[this.idAlias]];
 
         //If we can't find a property within result for the groupBy parameter at this level we create a new one.
         if (!result[entry[this.groupBy[iter]]] && iter < this.groupBy.length) {
-            console.log("TESTTT==============", entry[this.groupByAlias[iter]], result[entry[this.groupBy[iter]]]);
             result[entry[this.groupBy[iter]]] = { groupName: entry[this.groupByAlias[iter]] };
             nextResult = result[entry[this.groupBy[iter]]];
         }
