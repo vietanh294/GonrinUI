@@ -133,8 +133,25 @@ class Gantt {
         } else if (this.chartType === "month") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
+                let the_max_time_month = this.maxTime.getMonth();
+                let the_year = this.minTime.getFullYear();
+                let change_year = false;
                 for (let i = 0; i < this.divisionCount; i++) {
-                    let month = this.maxTime.getMonth() - this.divisionCount + 1 + i;
+                    let month = the_max_time_month - (this.divisionCount % 12) + 1 + i;
+                    month = (month + 12) % 12;
+                    if (change_year) {
+                        change_year = false;
+                        the_year = the_year + 1;
+                    }
+                    if (month === 0 || month === "0") {
+                        month = 12;
+                        change_year = true;
+                    }
+                    if (this.maxTime.getFullYear() !== this.minTime.getFullYear()) {
+                        let year = the_year % 100;
+                        month = month + "/" + year;
+                    }
+
                     headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.month} ${month}</div>`;
                 }
             } else {
