@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="css/gonrin.gantt.css">
+</head>
+
+<body>
+    <div id="chart"></div>
+    <script src="js/gonrin.gantt.js"></script>
+    <script>
+        let data = [
+            {
+                recordID: 1,
+                row: "Row for ID #1",
+                tooltip: "Tooltips here! Get your tooltips!",
+                start: "Wed Nov 01 2020 00:00:00",
+                end: "Wed Nov 15 2020 20:21:55",
+                group: "This is a group with a new name",
+                groupId: 5,
+                height: "50px",
+                cssClass: "text-center",
+                link: 'https://www.youtube.com/'
+            },
+            {
+                recordID: 2,
+                row: "Row for ID #2",
+                tooltip: "Tooltip for row 2",
+                start: "Nov 03 2020 11:00:00",
+                end: "Nov 20 2020 15:23:43",
+                group: "empty",
+                groupId: 1,
+                height: "50px",
+                bgcolor: "#ff0000",
+                cssClass: "text-center",
+                link: 'https://redriver-bus.gonapp.net/admin#bus_trip_daily/collection'
+            },
+            {
+                recordID: 1,
+                row: "Row for ID #1",
+                tooltip: "Tooltip unique to this item",
+                start: "Wed Nov 03 2020 06:00:00",
+                end: "Wed Nov 12 2020 10:00:00",
+                group: "test",
+                groupId: 2,
+                subGroupId: 1,
+                subGroup: "Subgroup #1",
+                cssClass: "text-center",
+                link: 'https://www.24h.com.vn/'
+            },
+            {
+                recordID: 5,
+                row: "Now we have grouping",
+                tooltip: "Tooltip after grouping",
+                start: "Wed Nov 03 2020 06:00:00",
+                end: "Wed Nov 25 2020 10:00:00",
+                group: "test",
+                groupId: 2,
+                subGroupId: 1,
+                dataBundle: { "uuid": "kasdkdklalkdklsa" },
+                cssClass: "text-center",
+                subGroup: "Subgroup #1",
+                link: 'https://www.google.com/'
+            }
+        ];
+
+
+        //This could be an API call to grab data
+        function refreshFunction() {
+            return data;
+        }
+
+        //Parameters that the chart expects
+        let params = {
+            sidebarHeader: "Unused right now",
+            noDataFoundMessage: "No data found",
+            startTimeAlias: "start",
+            endTimeAlias: "end",
+            idAlias: "recordID",
+            rowAlias: "row",
+            linkAlias: 'link',
+            // linkAlias: null,
+            tooltipAlias: "tooltip",
+            groupBy: "groupId,subGroupId",
+            groupByAlias: "group,subGroup",
+            chartType: "month",
+            refreshFunction: refreshFunction
+        }
+        // "hour", "day", "week", "month", "quarter","year"
+
+        //Create the chart.
+        //On first render the chart will call its refreshData function on its own.
+        let ganttChart = new Gantt("chart", params);
+
+        //To refresh the chart's data
+        ganttChart.refreshData();
+    </script>
+</body>
+
+</html>
