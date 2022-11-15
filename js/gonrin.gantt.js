@@ -71,6 +71,12 @@ class Gantt {
         } else if (this.chartType === "month") {
             this.maxTime = roundMonthUp(maxTime);
             this.minTime = roundMonthDown(minTime);
+        } else if (this.chartType === "quarter") {
+            this.maxTime = roundQuarterUp(maxTime);
+            this.minTime = roundQuarterDown(minTime);
+        } else if (this.chartType === "year") {
+            this.maxTime = roundYearUp(maxTime);
+            this.minTime = roundYearDown(minTime);
         }
 
         if (this.minTime === this.maxTime) return;
@@ -84,6 +90,11 @@ class Gantt {
         } else if (this.chartType === "month") {
             this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth();
+        } else if (this.chartType === "quarter") {
+            this.divisionCount = Math.ceil(((this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
+                + this.maxTime.getMonth() - this.minTime.getMonth()) / 3);
+        } else if (this.chartType === "year") {
+            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) + 1;
         }
         this.min_width_cont = this.divisionCount * this.itemWidth + parseInt(this.templateColumnWidth);
     }
@@ -136,11 +147,13 @@ class Gantt {
         } else if (this.chartType === "month") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
-                let the_max_time_month = this.maxTime.getMonth();
+                // let the_max_time_month = this.maxTime.getMonth();
+                let the_min_time_month = this.minTime.getMonth();
                 let the_year = this.minTime.getFullYear();
                 let change_year = false;
                 for (let i = 0; i < this.divisionCount; i++) {
-                    let month_text = the_max_time_month - (this.divisionCount % 12) + 1 + i;
+                    let month_text = the_min_time_month + i;
+                    // let month_text = the_max_time_month - (this.divisionCount % 12) + 1 + i;
                     month_text = (month_text + 12) % 12;
                     if (change_year) {
                         change_year = false;
@@ -154,12 +167,55 @@ class Gantt {
                         let year = the_year % 100;
                         month_text = month_text + "/" + year;
                     }
-
                     headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.month} ${month_text}</div>`;
                 }
             } else {
-                let month = this.maxTime.getMonth() - this.divisionCount + 1;
+                let month = this.minTime.getMonth();
                 headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.month} ${month}</div>`;
+            }
+            return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
+             repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
+        } else if (this.chartType === "quarter") {
+            let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
+            if (this.divisionCount > 1) {
+                let the_min_time_month = this.minTime.getMonth();
+                let the_min_time_quarter = Math.ceil(the_min_time_month / 3);
+                let the_year = this.minTime.getFullYear();
+                let change_year = false;
+                for (let i = 0; i < this.divisionCount; i++) {
+                    let quarter_text = the_min_time_quarter + i;
+                    quarter_text = (quarter_text + 4) % 4;
+                    if (change_year) {
+                        change_year = false;
+                        the_year = the_year + 1;
+                    }
+                    if (quarter_text === 0 || quarter_text === "0") {
+                        quarter_text = 4;
+                        change_year = true;
+                    }
+                    if (this.maxTime.getFullYear() !== this.minTime.getFullYear()) {
+                        let year = the_year % 100;
+                        quarter_text = quarter_text + "/" + year;
+                    }
+                    headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.quarter} ${quarter_text}</div>`;
+                }
+            } else {
+                let quarter_text = Math.ceil(this.minTime.getMonth() / 3);
+                headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.quarter} ${quarter_text}</div>`;
+            }
+            return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
+             repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
+        } else if (this.chartType === "year") {
+            let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
+            if (this.divisionCount > 1) {
+                let the_year = this.minTime.getFullYear();
+                for (let i = 0; i < this.divisionCount; i++) {
+                    let year_text = the_year + i;
+                    headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.year} ${year_text}</div>`;
+                }
+            } else {
+                let year_text = this.maxTime.getFullYear() - this.divisionCount + 1;
+                headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.year} ${year_text}</div>`;
             }
             return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
              repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
@@ -357,12 +413,32 @@ function roundHourDown(date) {
 }
 
 function roundMonthUp(date) {
-    y = date.getFullYear(), m = date.getMonth();
+    let y = date.getFullYear(), m = date.getMonth();
     return new Date(y, m + 1, 1);
 }
 function roundMonthDown(date) {
-    y = date.getFullYear(), m = date.getMonth();
+    let y = date.getFullYear(), m = date.getMonth();
     return new Date(y, m, 1);
+}
+
+function roundQuarterUp(date) {
+    let y = date.getFullYear(), m = date.getMonth();
+    let mq = (Math.ceil(m / 3) * 3)
+    return new Date(y, mq, 1);
+}
+function roundQuarterDown(date) {
+    let y = date.getFullYear(), m = date.getMonth();
+    let mq = (Math.floor(m / 3) * 3)
+    return new Date(y, mq, 1);
+}
+
+function roundYearUp(date) {
+    let y = date.getFullYear();
+    return new Date(y + 1, 1, 1);
+}
+function roundYearDown(date) {
+    let y = date.getFullYear();
+    return new Date(y, 1, 1);
 }
 
 
