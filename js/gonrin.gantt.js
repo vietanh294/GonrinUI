@@ -8,6 +8,8 @@ class Gantt {
         this.idAlias = options.idAlias || 'id';
         this.rowAlias = options.rowAlias || 'rowTitle';
         this.templateColumnWidth = options.templateColumnWidth || '150px';
+        this.min_width_cont = 600;
+        this.itemWidth = options.itemWidth || 50;
 
         this.linkAlias = options.linkAlias;
         this.tooltipAlias = options.tooltipAlias || 'tooltip';
@@ -83,6 +85,7 @@ class Gantt {
             this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth();
         }
+        this.min_width_cont = this.divisionCount * this.itemWidth + parseInt(this.templateColumnWidth);
     }
     //Takes advantage of the fact that javascript is kind of pass-by-reference for object data types
     //So every change to result here is actually a change to our groupedData variable
@@ -159,7 +162,7 @@ class Gantt {
                 headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.month} ${month}</div>`;
             }
             return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
-             repeat(${this.divisionCount}, 1fr)">${headerDivs}</div>`;
+             repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
         }
     }
 
@@ -168,8 +171,9 @@ class Gantt {
         for (let i = 0; i < this.divisionCount; i++) {
             lines += `<div class="gonrin-gantt-line"></div>`;
         }
+
         return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
-         repeat(${this.divisionCount}, 1fr)">${lines}</div>`;
+         repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;
     }
 
     buildRow(rowArr, dataIndex) {
@@ -212,7 +216,7 @@ class Gantt {
     }
 
     buildContent() {
-        let body = ['<div class="gonrin-gantt-row-container">'],
+        let body = [`<div class="gonrin-gantt-row-container" style="min-width: ${this.min_width_cont}px;">`],
             header = this.buildHeader(),
             self = this;
 

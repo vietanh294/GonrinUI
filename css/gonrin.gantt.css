@@ -25,6 +25,7 @@
     display: flex;
     padding: 10px 0px 10px 5px;
     justify-content: center;
+    /* min-width: 50px !important; */
 }
 
 .gonrin-gantt-sidebar-header {
@@ -80,9 +81,6 @@
     position: relative;
 }
 
-
-
-
 .gonrin-gantt-row-entry {
     height: 25px;
     border-radius: 4px;
@@ -108,6 +106,7 @@
 
 .gonrin-gantt-lines-container>div:not(:last-child):not(.gonrin-gantt-sidebar-template) {
     border-right: 1px solid var(--border-color);
+    min-width: 49px !important;
 }
 
 .gonrin-gantt-row-entry-tooltip {
@@ -116,6 +115,7 @@
     max-width: 500px;
     background-color: #ffffff;
     box-shadow: 0 0 5px #aaa;
+    border: solid 0.5px #8777d9;;
     padding: 10px;
     z-index: 20;
 }
