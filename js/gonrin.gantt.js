@@ -52,6 +52,7 @@ class Gantt {
         //This ensures that the data is rendered in the proper location when we generate the chart.
         let sortedData = this.rawData.sort((a, b) => new Date(a[this.startTimeAlias]) - new Date(b[this.startTimeAlias])),
             groupedData = {};
+
         for (let dataRow of sortedData) {
             this.groupArray(groupedData, dataRow);
         }
@@ -79,7 +80,8 @@ class Gantt {
                 this.divisionCount++;
             }
         } else if (this.chartType === "month") {
-            this.divisionCount = this.maxTime.getMonth() - this.minTime.getMonth();
+            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
+                + this.maxTime.getMonth() - this.minTime.getMonth();
         }
     }
     //Takes advantage of the fact that javascript is kind of pass-by-reference for object data types
