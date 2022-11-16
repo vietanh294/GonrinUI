@@ -35,10 +35,9 @@ class Gantt {
         this.refreshData();
     }
 
-    refreshData(chartType = null) {
-        if (!!chartType) {
-            this.chartType =  chartType;
-        }
+    refreshData(options = {}) {
+        this.chartType = options.chartType || "month";
+        
         this.rawData = this.refreshFunction();
         this.empty();
         if (this.rawData.length < 1) {
