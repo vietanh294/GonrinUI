@@ -35,7 +35,10 @@ class Gantt {
         this.refreshData();
     }
 
-    refreshData() {
+    refreshData(chartType = null) {
+        if (!!chartType) {
+            this.chartType =  chartType;
+        }
         this.rawData = this.refreshFunction();
         this.empty();
         if (this.rawData.length < 1) {
@@ -52,9 +55,9 @@ class Gantt {
 
         //Sorts the data by the start time ascending before anything else is done
         //This ensures that the data is rendered in the proper location when we generate the chart.
-        let sortedData = this.rawData.sort((a, b) => new Date(a[this.startTimeAlias]) - new Date(b[this.startTimeAlias])),
-            groupedData = {};
-
+        // let sortedData = this.rawData.sort((a, b) => new Date(a[this.startTimeAlias]) - new Date(b[this.startTimeAlias])),
+        //     groupedData = {};
+        let sortedData = this.rawData, groupedData = {};
         for (let dataRow of sortedData) {
             this.groupArray(groupedData, dataRow);
         }
