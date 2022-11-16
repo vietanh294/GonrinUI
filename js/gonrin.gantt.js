@@ -35,10 +35,9 @@ class Gantt {
         this.refreshData();
     }
 
-    refreshData(chartType = null) {
-        if (!!chartType) {
-            this.chartType =  chartType;
-        }
+    refreshData(options = {}) {
+        this.chartType = options.chartType || "month";
+
         this.rawData = this.refreshFunction();
         this.empty();
         if (this.rawData.length < 1) {
@@ -71,6 +70,9 @@ class Gantt {
         if (this.chartType === "hour") {
             this.maxTime = roundHourUp(maxTime);
             this.minTime = roundHourDown(minTime);
+        } else if (this.chartType === "week") {
+            this.maxTime = roundWeekUp(maxTime);
+            this.minTime = roundWeekDown(minTime);
         } else if (this.chartType === "month") {
             this.maxTime = roundMonthUp(maxTime);
             this.minTime = roundMonthDown(minTime);
@@ -90,6 +92,9 @@ class Gantt {
             for (let i = new Date(this.minTime.getTime()); i <= this.maxTime; i.setTime(i.getTime() + (60 * 60 * 1000))) {
                 this.divisionCount++;
             }
+        } else if (this.chartType === "week") {
+            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
+                + this.maxTime.getMonth() - this.minTime.getMonth();
         } else if (this.chartType === "month") {
             this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth();
@@ -414,6 +419,15 @@ function roundHourDown(date) {
     let m = 60 * 60 * 1000;
     return new Date(Math.floor(date.getTime() / m) * m);
 }
+function roundWeekUp(date) {
+    let y = date.getFullYear(), m = date.getMonth();
+    return new Date(y, m + 1, 1);
+}
+function roundWeekDown(date) {
+    let y = date.getFullYear(), m = date.getMonth();
+    return new Date(y, m, 1);
+}
+
 
 function roundMonthUp(date) {
     let y = date.getFullYear(), m = date.getMonth();
