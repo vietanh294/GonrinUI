@@ -443,7 +443,7 @@ function roundQuarterDown(date) {
 
 function roundYearUp(date) {
     let y = date.getFullYear();
-    return new Date(y + 1, 1, 1);
+    return new Date(y, 1, 1);
 }
 function roundYearDown(date) {
     let y = date.getFullYear();
