@@ -223,7 +223,7 @@ class Gantt {
              repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
         }
     }
-
+    
     buildLines() {
         let lines = '<div class="gonrin-gantt-sidebar-template"></div>';
         for (let i = 0; i < this.divisionCount; i++) {
@@ -234,8 +234,10 @@ class Gantt {
         today_line_width = (currTime - this.minTime) / (this.maxTime - this.minTime) * 100;
 
         lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
-            width: calc(100% - ${this.templateColumnWidth});">
-            <div class="gonrin-gantt-today-line" style="width: ${today_line_width}%;"></div></div>`;
+            width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${this.divisionCount -1}fr  1fr;">
+            <div class="gonrin-gantt-line">
+            <div class="gonrin-gantt-today-line" style="width: ${today_line_width}%;"></div></div>
+            <div class="gonrin-gantt-line"></div></div>`;
 
         return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
          repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;
