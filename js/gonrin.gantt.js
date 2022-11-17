@@ -150,7 +150,7 @@ class Gantt {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
                 // let the_max_time_month = this.maxTime.getMonth();
-                let the_min_time_month = this.minTime.getMonth();
+                let the_min_time_month = this.minTime.getMonth() + 1;
                 let the_year = this.minTime.getFullYear();
                 let change_year = false;
                 for (let i = 0; i < this.divisionCount; i++) {
@@ -180,7 +180,7 @@ class Gantt {
         } else if (this.chartType === "quarter") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
-                let the_min_time_month = this.minTime.getMonth();
+                let the_min_time_month = this.minTime.getMonth() + 1;
                 let the_min_time_quarter = Math.ceil(the_min_time_month / 3);
                 let the_year = this.minTime.getFullYear();
                 let change_year = false;
