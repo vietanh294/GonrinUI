@@ -91,12 +91,12 @@ class Gantt {
             }
         } else if (this.chartType === "month") {
             this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
-                + this.maxTime.getMonth() - this.minTime.getMonth();
+                + this.maxTime.getMonth() - this.minTime.getMonth() + 1;
         } else if (this.chartType === "quarter") {
             this.divisionCount = Math.ceil(((this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
-                + this.maxTime.getMonth() - this.minTime.getMonth()) / 3);
+                + this.maxTime.getMonth() - this.minTime.getMonth()) / 3) + 1;
         } else if (this.chartType === "year") {
-            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) + 1;
+            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) + 2;
         }
         this.min_width_cont = this.divisionCount * this.itemWidth + parseInt(this.templateColumnWidth);
     }
