@@ -96,7 +96,7 @@ class Gantt {
             this.divisionCount = Math.ceil(((this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth()) / 3);
         } else if (this.chartType === "year") {
-            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear());
+            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) + 1;
         }
         this.min_width_cont = this.divisionCount * this.itemWidth + parseInt(this.templateColumnWidth);
     }
