@@ -24,9 +24,9 @@
 
 .gonrin-gantt-header {
     display: flex;
-    padding: 10px 0px 10px 5px;
+    padding: 10px 5px 10px 5px;
     justify-content: center;
-    /* min-width: 50px !important; */
+    text-align: center;
 }
 
 .gonrin-gantt-sidebar-header {
@@ -73,7 +73,6 @@
 }
 
 .gonrin-gantt-sub-row-wrapper {
-    /* max-height: 15px; */
     padding: 4px;
     display: flex;
     width: 100%;
@@ -87,7 +86,6 @@
     border-radius: 4px;
     cursor: pointer;
     background-color: var(--entry-color);
-    /* background-color: #8777d992; */
 }
 
 .gonrin-gantt-row-entry:hover {
