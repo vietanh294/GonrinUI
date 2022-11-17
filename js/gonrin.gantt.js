@@ -37,7 +37,7 @@ class Gantt {
 
     refreshData(options = {}) {
         this.chartType = options.chartType || "month";
-        
+
         this.rawData = this.refreshFunction();
         this.empty();
         if (this.rawData.length < 1) {
@@ -229,6 +229,13 @@ class Gantt {
         for (let i = 0; i < this.divisionCount; i++) {
             lines += `<div class="gonrin-gantt-line"></div>`;
         }
+        let currTime = new Date();
+        let today_line_width = 50;
+        today_line_width = (currTime - this.minTime) / (this.maxTime - this.minTime) * 100;
+
+        lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
+            width: calc(100% - ${this.templateColumnWidth});">
+            <div class="gonrin-gantt-today-line" style="width: ${today_line_width}%;"></div></div>`;
 
         return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
          repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;

@@ -1,8 +1,9 @@
 .gonrin-gantt-wrapper {
     --entry-color: #033b6a;
-    --border-color: rgba(0, 0, 0, 0.1);
+    --border-color: #0000001a;
     --background-color: #f9f9f9;
     --hovered-background: #f0f0f0;
+    --today-line-border-color: #fd9b1c;
 }
 
 .gonrin-gantt-wrapper {
@@ -107,6 +108,29 @@
 .gonrin-gantt-lines-container>div:not(:last-child):not(.gonrin-gantt-sidebar-template) {
     border-right: 1px solid var(--border-color);
     min-width: 49px !important;
+}
+
+.gonrin-gantt-today-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    border-right: 1.2px solid var(--today-line-border-color, #ff9307);
+    z-index: 2;
+}
+
+
+.gonrin-gantt-today-line{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0px;
+    background-color: transparent;
+    border-right: 1.2px solid var(--today-line-border-color, #ff9307);
+    z-index: 2;
 }
 
 .gonrin-gantt-row-entry-tooltip {
