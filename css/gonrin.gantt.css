@@ -1,5 +1,5 @@
 .gonrin-gantt-wrapper {
-    --entry-color: #033b6a;
+    --entry-color: #8777d992;
     --border-color: #0000001a;
     --background-color: #f9f9f9;
     --hovered-background: #f0f0f0;
@@ -86,8 +86,8 @@
     height: 25px;
     border-radius: 4px;
     cursor: pointer;
-    /* background-color: var(--entry-color); */
-    background-color: #8777d9;
+    background-color: var(--entry-color);
+    /* background-color: #8777d992; */
 }
 
 .gonrin-gantt-row-entry:hover {
