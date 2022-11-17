@@ -96,7 +96,7 @@ class Gantt {
             this.divisionCount = Math.ceil(((this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth()) / 3) + 1;
         } else if (this.chartType === "year") {
-            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) + 2;
+            this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) + 1;
         }
         this.min_width_cont = this.divisionCount * this.itemWidth + parseInt(this.templateColumnWidth);
     }
@@ -443,7 +443,7 @@ function roundQuarterDown(date) {
 
 function roundYearUp(date) {
     let y = date.getFullYear();
-    return new Date(y, 1, 1);
+    return new Date(y + 1, 1, 1);
 }
 function roundYearDown(date) {
     let y = date.getFullYear();
