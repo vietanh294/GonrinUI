@@ -232,7 +232,7 @@ class Gantt {
         let currTime = new Date();
         let today_line_width = 50;
         today_line_width = (currTime - this.minTime) / (this.maxTime - this.minTime) * 100;
-
+        console.log("today_line_width",today_line_width,currTime,this.minTime,this.maxTime);
         lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
             width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${this.divisionCount -1}fr  1fr;">
             <div class="gonrin-gantt-line">
@@ -445,11 +445,11 @@ function roundQuarterDown(date) {
 
 function roundYearUp(date) {
     let y = date.getFullYear();
-    return new Date(y + 1, 1, 1);
+    return new Date(y + 1, 0, 1);
 }
 function roundYearDown(date) {
     let y = date.getFullYear();
-    return new Date(y, 1, 1);
+    return new Date(y, 0, 1);
 }
 
 
