@@ -1015,6 +1015,14 @@
                         error:function(){
                         	var filter_error;
                             var errMsg = "ERROR: " + language.error_load_data;
+				try {
+									errMsg = response.responseJSON.error_message;
+								} catch (e) {
+
+								}
+								if (!errMsg) {
+									errMsg = "ERROR: " + language.error_load_data
+								}
                             element.html('<span style="color: red;">' + errMsg + '</span>');
                             
                             notifyEvent({
