@@ -1012,7 +1012,7 @@
 							}								
                     		
                         },
-                        error:function(){
+                        error:function(collection, response, options){
                         	var filter_error;
                             var errMsg = "ERROR: " + language.error_load_data;
 				try {
