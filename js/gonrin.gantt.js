@@ -433,12 +433,12 @@ function roundMonthDown(date) {
 
 function roundQuarterUp(date) {
     let y = date.getFullYear(), m = date.getMonth();
-    let mq = (Math.ceil((m + 1) / 3) * 3) - 1;
+    let mq = (Math.ceil((m + 1) / 3) * 3) ;
     return new Date(y, mq, 1);
 }
 function roundQuarterDown(date) {
     let y = date.getFullYear(), m = date.getMonth();
-    let mq = (Math.floor((m + 1) / 3) * 3) - 1;
+    let mq = (Math.floor((m + 1) / 3) * 3) ;
     return new Date(y, mq, 1);
 }
 
