@@ -21,6 +21,9 @@ class Gantt {
             "hour": "Giờ", "day": "Ngày", "week": "Tuần", "month": "Tháng", "quarter": "Quý", "year": "Năm"
         };
 
+        this.sun_color = options.sun_color || "#d4879e66";
+        this.sat_color = options.sat_color || "#7ebccf66";
+        this.weekday_text = options.weekday_text || ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
         this.data = {};
         this.rawData = [];
@@ -70,6 +73,9 @@ class Gantt {
         if (this.chartType === "hour") {
             this.maxTime = roundHourUp(maxTime);
             this.minTime = roundHourDown(minTime);
+        } else if (this.chartType === "day") {
+            this.maxTime = roundDayUp(maxTime);
+            this.minTime = roundDayDown(minTime);
         } else if (this.chartType === "month") {
             this.maxTime = roundMonthUp(maxTime);
             this.minTime = roundMonthDown(minTime);
@@ -89,7 +95,12 @@ class Gantt {
             for (let i = new Date(this.minTime.getTime()); i <= this.maxTime; i.setTime(i.getTime() + (60 * 60 * 1000))) {
                 this.divisionCount++;
             }
-        } else if (this.chartType === "month") {
+        } else if (this.chartType === "day") {
+            for (let i = new Date(this.minTime.getTime()); i <= this.maxTime; i.setTime(i.getTime() + (24 * 60 * 60 * 1000))) {
+                this.divisionCount++;
+            }
+        }
+        else if (this.chartType === "month") {
             this.divisionCount = (this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth() + 1;
         } else if (this.chartType === "quarter") {
@@ -146,7 +157,25 @@ class Gantt {
             }
             return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
              repeat(${this.divisionCount}, 1fr)">${headerDivs}</div>`;
-        } else if (this.chartType === "month") {
+        } else if (this.chartType === "day") {
+            let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
+            if (this.divisionCount > 1) {
+                for (let i = 0; i < this.divisionCount; i++) {
+                    let date = new Date(this.minTime.getTime() + ((24 * 60 * 60 * 1000) * i)),
+                        _year = date.getFullYear(),
+                        _month = date.getMonth(),
+                        _day = date.getDate(),
+                        _week_day = date.getDay();
+                    headerDivs += `<div class="gonrin-gantt-header">${this.weekday_text[_week_day]} ${_day}/${_month}</div>`;
+                }
+            } else {
+                let day = this.minTime.getDay();
+                headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.day} ${day}</div>`;
+            }
+            return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
+             repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
+        }
+        else if (this.chartType === "month") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
                 // let the_max_time_month = this.maxTime.getMonth();
@@ -223,17 +252,31 @@ class Gantt {
              repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
         }
     }
-    
+
     buildLines() {
         let lines = '<div class="gonrin-gantt-sidebar-template"></div>';
-        for (let i = 0; i < this.divisionCount; i++) {
-            lines += `<div class="gonrin-gantt-line"></div>`;
+        if ((this.chartType === "day")) {
+            for (let i = 0; i < this.divisionCount; i++) {
+                let date = new Date(this.minTime.getTime() + ((24 * 60 * 60 * 1000) * i)),
+                    _week_day = date.getDay();
+                let style_header_color = '';
+                if (_week_day == 0) {
+                    style_header_color = `style="background-color: ${this.sun_color}!important;"`;
+                } else if (_week_day == 6) {
+                    style_header_color = `style="background-color: ${this.sat_color}!important;"`;
+                }
+                lines += `<div class="gonrin-gantt-line" ${style_header_color}></div>`;
+            }
+        } else {
+            for (let i = 0; i < this.divisionCount; i++) {
+                lines += `<div class="gonrin-gantt-line"></div>`;
+            }
         }
         let currTime = new Date();
         let today_line_width = 50;
         today_line_width = (currTime - this.minTime) / (this.maxTime - this.minTime) * 100;
         lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
-            width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${this.divisionCount -1}fr  1fr;">
+            width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${this.divisionCount - 1}fr  1fr;">
             <div class="gonrin-gantt-line">
             <div class="gonrin-gantt-today-line" style="width: ${today_line_width}%;"></div></div>
             <div class="gonrin-gantt-line"></div></div>`;
@@ -422,6 +465,16 @@ function roundHourDown(date) {
     return new Date(Math.floor(date.getTime() / m) * m);
 }
 
+function roundDayUp(date) {
+    let y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
+    return new Date(y, m, (d + 2));
+}
+
+function roundDayDown(date) {
+    let y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
+    return new Date(y, m, (d - 1));
+}
+
 function roundMonthUp(date) {
     let y = date.getFullYear(), m = date.getMonth();
     return new Date(y, m + 1, 1);
@@ -433,12 +486,12 @@ function roundMonthDown(date) {
 
 function roundQuarterUp(date) {
     let y = date.getFullYear(), m = date.getMonth();
-    let mq = (Math.ceil((m + 1) / 3) * 3) ;
+    let mq = (Math.ceil((m + 1) / 3) * 3);
     return new Date(y, mq, 1);
 }
 function roundQuarterDown(date) {
     let y = date.getFullYear(), m = date.getMonth();
-    let mq = (Math.floor((m + 1) / 3) * 3) ;
+    let mq = (Math.floor((m + 1) / 3) * 3);
     return new Date(y, mq, 1);
 }
 
