@@ -291,14 +291,14 @@ class Gantt {
         return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
          repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;
     }
-    
+
     buildRow(rowArr, dataIndex) {
         if (!this.overlap_bar) {
             return this.buildRowNoOverlap(rowArr, dataIndex);
         }
         let totalTime = this.maxTime - this.minTime, baseTime = this.minTime, row_height = "max(1rem",
             compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
-        for (let i = 0; i < rowArr.length; i++) { row_height += "," + rowArr[i]?.height; };
+        for (let i = 0; i < rowArr.length; i++) { if (!!rowArr[i]?.height) { row_height += "," + rowArr[i]?.height; } };
         row_height += ")";
         compositeRows += `<div style="width:100%; height: ${row_height};background-color: transparent !important;";></div>`;
         for (let i = 0; i < rowArr.length; i++) {
