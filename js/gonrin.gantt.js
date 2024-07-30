@@ -1,6 +1,7 @@
 class Gantt {
     constructor(staticID, options) {
         this.staticID = staticID;
+        this.duplicate_bar = true; // true/fasle
         this.sidebarHeader = options.sidebarHeader || 'Unused parameter right now';
         this.noDataFoundMessage = options.noDataFoundMessage || 'No data found.';
         this.startTimeAlias = options.startTimeAlias || 'startTime';
@@ -21,8 +22,8 @@ class Gantt {
             "hour": "Giờ", "day": "Ngày", "week": "Tuần", "month": "Tháng", "quarter": "Quý", "year": "Năm"
         };
 
-        this.sun_color = options.sun_color || "#d4879e66";
-        this.sat_color = options.sat_color || "#7ebccf66";
+        this.sun_color = options.sun_color || "#f7eded";
+        this.sat_color = options.sat_color || "#f1f6f7";
         this.weekday_text = options.weekday_text || ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
         this.data = {};
@@ -166,7 +167,13 @@ class Gantt {
                         _month = date.getMonth(),
                         _day = date.getDate(),
                         _week_day = date.getDay();
-                    headerDivs += `<div class="gonrin-gantt-header">${this.weekday_text[_week_day]} ${_day}/${_month}</div>`;
+                    let style_header_color = '';
+                    if (_week_day == 0) {
+                        style_header_color = `style="background-color: ${this.sun_color}!important;"`;
+                    } else if (_week_day == 6) {
+                        style_header_color = `style="background-color: ${this.sat_color}!important;"`;
+                    }
+                    headerDivs += `<div class="gonrin-gantt-header" ${style_header_color}>${this.weekday_text[_week_day]} ${_day}/${_month}</div>`;
                 }
             } else {
                 let day = this.minTime.getDay();
@@ -288,8 +295,10 @@ class Gantt {
     buildRow(rowArr, dataIndex) {
         let totalTime = this.maxTime - this.minTime,
             compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
+        console.log("rowArr=======", rowArr);
         for (let i = 0; i < rowArr.length; i++) {
             // let rowData = rowArr[i];
+            // duplicate_bar
             //Check to see if the current entry has a start and end time. If not we break
             if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
                 break;
