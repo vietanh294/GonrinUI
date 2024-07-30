@@ -47,9 +47,11 @@
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+
 .gonrin-text-center {
     text-align: center;
 }
+
 .gonrin-space-center {
     margin: 0;
     position: absolute;
@@ -81,7 +83,24 @@
     position: relative;
 }
 
+.gonrin-gantt-row-group {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+}
+
+.gonrin-gantt-row-group div {
+    position: relative;
+}
+
 .gonrin-gantt-row-entry {
+    position: relative;
     height: 25px;
     border-radius: 4px;
     cursor: pointer;
@@ -108,7 +127,7 @@
     min-width: 49px !important;
 }
 
-.gonrin-gantt-today-container{
+.gonrin-gantt-today-container {
     display: grid;
     position: absolute;
     top: 0;
@@ -119,7 +138,7 @@
     z-index: 2;
 }
 
-.gonrin-gantt-today-line{
+.gonrin-gantt-today-line {
     position: relative;
     top: 0;
     left: 0;
@@ -130,7 +149,7 @@
     z-index: 2;
 }
 
-.gonrin-gantt-today-line2{
+.gonrin-gantt-today-line2 {
     position: absolute;
     top: 0;
     left: 0;
@@ -149,7 +168,8 @@
     max-width: 500px;
     background-color: #ffffff;
     box-shadow: 0 0 5px #aaa;
-    border: solid 0.5px #8777d9;;
+    border: solid 0.5px #8777d9;
+    ;
     padding: 10px;
     z-index: 20;
 }
@@ -183,9 +203,9 @@
     min-height: 2rem;
     padding: 0.5rem;
     background: #f3f4f5;
-    border-bottom:  1px solid #ebedef;  
+    border-bottom: 1px solid #ebedef;
     border: 0;
     border-radius: 3px;
-    box-shadow: #00000040 0px 0.0625em 0.0625em, #00000040 0px 0.125em 0.5em, 
-    #ffffff1a 0px 0px 0px 1px inset;
-  }
+    box-shadow: #00000040 0px 0.0625em 0.0625em, #00000040 0px 0.125em 0.5em,
+        #ffffff1a 0px 0px 0px 1px inset;
+}
