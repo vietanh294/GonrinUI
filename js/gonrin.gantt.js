@@ -1,7 +1,7 @@
 class Gantt {
     constructor(staticID, options) {
         this.staticID = staticID;
-        this.duplicate_bar = true; // true/fasle
+        this.overlap_bar = true; // true/fasle
         this.sidebarHeader = options.sidebarHeader || 'Unused parameter right now';
         this.noDataFoundMessage = options.noDataFoundMessage || 'No data found.';
         this.startTimeAlias = options.startTimeAlias || 'startTime';
@@ -291,14 +291,56 @@ class Gantt {
         return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
          repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;
     }
-
+    
     buildRow(rowArr, dataIndex) {
+        if (!this.overlap_bar) {
+            return this.buildRowNoOverlap(rowArr, dataIndex);
+        }
+        let totalTime = this.maxTime - this.minTime, baseTime = this.minTime, row_height = "max(1rem",
+            compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
+        for (let i = 0; i < rowArr.length; i++) { row_height += "," + rowArr[i]?.height; };
+        row_height += ")";
+        compositeRows += `<div style="width:100%; height: ${row_height};background-color: transparent !important;";></div>`;
+        for (let i = 0; i < rowArr.length; i++) {
+            //Check to see if the current entry has a start and end time. If not we break
+            let gourp_entry = `<div class="gonrin-gantt-row-group">`;
+            if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
+                break;
+            let currElStart = new Date(rowArr[i][this.startTimeAlias]),
+                currElEnd = new Date(rowArr[i][this.endTimeAlias]),
+                currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100;
+            if (i === 0 || (rowArr[i - 1] && new Date(rowArr[i - 1][this.endTimeAlias]) !== currElStart)) {
+                let difference = ((currElStart - baseTime) / totalTime) * 100;
+                gourp_entry += `<div style="width:${difference}%;"></div>`;
+            }
+            //If we don't have a linkAlias we assume the entries are not meant to link anywhere, so we just render them as divs instead.
+            let data_obj = '';
+            if (!!rowArr[i]?.dataBundle && typeof rowArr[i]?.dataBundle === "object") {
+                for (const key in rowArr[i].dataBundle) {
+                    if (Object.hasOwnProperty.call(rowArr[i].dataBundle, key)) {
+                        data_obj = data_obj + "data-" + key + `="` + rowArr[i].dataBundle[key] + `" `;
+                    }
+                }
+            }
+            if (this.linkAlias) {
+                gourp_entry += `<a class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" href="${rowArr[i][this.linkAlias]}" data-index="${dataIndex.join('-')}-${i}" 
+                    style="width:${currElRunPercent}%; height:${rowArr[i]?.height ?? ""};
+                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></a>`;
+            } else {
+                gourp_entry += `<div class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" data-index="${dataIndex.join('-')}-${i}" 
+                    style="width:${currElRunPercent}%;height:${rowArr[i]?.height ?? ""};
+                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></div>`;
+            }
+            gourp_entry += '</div>';
+            compositeRows += gourp_entry;
+        }
+        return compositeRows + '</div></div>';
+    }
+
+    buildRowNoOverlap(rowArr, dataIndex) {
         let totalTime = this.maxTime - this.minTime,
             compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
-        console.log("rowArr=======", rowArr);
         for (let i = 0; i < rowArr.length; i++) {
-            // let rowData = rowArr[i];
-            // duplicate_bar
             //Check to see if the current entry has a start and end time. If not we break
             if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
                 break;
@@ -332,6 +374,7 @@ class Gantt {
         }
         return compositeRows + '</div></div>';
     }
+
 
     buildContent() {
         let body = [`<div class="gonrin-gantt-row-container" style="min-width: ${this.min_width_cont}px;">`],
