@@ -83,24 +83,34 @@
     position: relative;
 }
 
-.gonrin-gantt-row-group {
+/* .gonrin-gantt-row-group {
     position: absolute;
     left: 0;
     top: 50%;
     transform: translate(0, -50%);
-    width: 100%;
+    width: 0%;
     height: 100%;
     z-index: 9;
     display: flex;
     align-items: center;
+    overflow-x: visible
 }
-
 .gonrin-gantt-row-group div {
     position: relative;
 }
-
 .gonrin-gantt-row-entry {
     position: relative;
+    height: 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--entry-color);
+} */
+
+.gonrin-gantt-row-entry {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: 0;
     height: 25px;
     border-radius: 4px;
     cursor: pointer;
@@ -109,6 +119,16 @@
 
 .gonrin-gantt-row-entry:hover {
     box-shadow: var(--entry-color) 0px 0px 2px .1px;
+}
+
+.gonrin-gantt-overlap-stripe {
+    color: transparent;
+    z-index: 9;
+    background: repeating-linear-gradient(45deg,
+            #ffffff,
+            #fafafa 10px,
+            #f7f7f7 10px,
+            #f4f4f4 20px);
 }
 
 .gonrin-gantt-lines-container {
