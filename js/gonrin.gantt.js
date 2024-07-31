@@ -293,9 +293,6 @@ class Gantt {
     }
 
     buildRow(rowArr, dataIndex) {
-        if (!this.overlap_bar) {
-            return this.buildRowNoOverlap(rowArr, dataIndex);
-        }
         let totalTime = this.maxTime - this.minTime, baseTime = this.minTime, row_height = "max(1rem",
             compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
         for (let i = 0; i < rowArr.length; i++) { if (!!rowArr[i]?.height) { row_height += "," + rowArr[i]?.height; } };
@@ -303,54 +300,15 @@ class Gantt {
         compositeRows += `<div style="width:100%; height: ${row_height};background-color: transparent !important;";></div>`;
         for (let i = 0; i < rowArr.length; i++) {
             //Check to see if the current entry has a start and end time. If not we break
-            let gourp_entry = `<div class="gonrin-gantt-row-group">`;
             if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
                 break;
             let currElStart = new Date(rowArr[i][this.startTimeAlias]),
                 currElEnd = new Date(rowArr[i][this.endTimeAlias]),
-                currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100;
+                currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100,
+                difference = 0;
             if (i === 0 || (rowArr[i - 1] && new Date(rowArr[i - 1][this.endTimeAlias]) !== currElStart)) {
-                let difference = ((currElStart - baseTime) / totalTime) * 100;
-                gourp_entry += `<div style="width:${difference}%;"></div>`;
-            }
-            //If we don't have a linkAlias we assume the entries are not meant to link anywhere, so we just render them as divs instead.
-            let data_obj = '';
-            if (!!rowArr[i]?.dataBundle && typeof rowArr[i]?.dataBundle === "object") {
-                for (const key in rowArr[i].dataBundle) {
-                    if (Object.hasOwnProperty.call(rowArr[i].dataBundle, key)) {
-                        data_obj = data_obj + "data-" + key + `="` + rowArr[i].dataBundle[key] + `" `;
-                    }
-                }
-            }
-            if (this.linkAlias) {
-                gourp_entry += `<a class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" href="${rowArr[i][this.linkAlias]}" data-index="${dataIndex.join('-')}-${i}" 
-                    style="width:${currElRunPercent}%; height:${rowArr[i]?.height ?? ""};
-                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></a>`;
-            } else {
-                gourp_entry += `<div class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" data-index="${dataIndex.join('-')}-${i}" 
-                    style="width:${currElRunPercent}%;height:${rowArr[i]?.height ?? ""};
-                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></div>`;
-            }
-            gourp_entry += '</div>';
-            compositeRows += gourp_entry;
-        }
-        return compositeRows + '</div></div>';
-    }
-
-    buildRowNoOverlap(rowArr, dataIndex) {
-        let totalTime = this.maxTime - this.minTime,
-            compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
-        for (let i = 0; i < rowArr.length; i++) {
-            //Check to see if the current entry has a start and end time. If not we break
-            if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
-                break;
-            let currElStart = new Date(rowArr[i][this.startTimeAlias]),
-                currElEnd = new Date(rowArr[i][this.endTimeAlias]),
-                currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100;
-            if (i === 0 || (rowArr[i - 1] && new Date(rowArr[i - 1][this.endTimeAlias]) !== currElStart)) {
-                let baseTime = (i === 0 ? this.minTime : new Date(rowArr[i - 1][this.endTimeAlias])),
-                    difference = ((currElStart - baseTime) / totalTime) * 100;
-                compositeRows += `<div style="width:${difference}%;"></div>`;
+                difference = ((currElStart - baseTime) / totalTime) * 100;
+                // compositeRows += `<div style="width:${difference}%;"></div>`;
             }
             //If we don't have a linkAlias we assume the entries are not meant to link anywhere, so we just render them as divs instead.
             let data_obj = '';
@@ -365,15 +323,100 @@ class Gantt {
             if (this.linkAlias) {
                 compositeRows += `<a class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" href="${rowArr[i][this.linkAlias]}" data-index="${dataIndex.join('-')}-${i}" 
                     style="width:${currElRunPercent}%; height:${rowArr[i]?.height ?? ""};
-                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></a>`;
+                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;
+                    left: ${difference}%;"  ${data_obj}></a>`;
             } else {
                 compositeRows += `<div class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" data-index="${dataIndex.join('-')}-${i}" 
                     style="width:${currElRunPercent}%;height:${rowArr[i]?.height ?? ""};
-                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></div>`;
+                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;                    
+                    left: ${difference}%;"  ${data_obj}></div>`;
             }
         }
         return compositeRows + '</div></div>';
     }
+
+    // buildRowOverlap(rowArr, dataIndex) {
+    //     if (!this.overlap_bar) {
+    //         return this.buildRowNoOverlap(rowArr, dataIndex);
+    //     }
+    //     let totalTime = this.maxTime - this.minTime, baseTime = this.minTime, row_height = "max(1rem",
+    //         compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
+    //     for (let i = 0; i < rowArr.length; i++) { if (!!rowArr[i]?.height) { row_height += "," + rowArr[i]?.height; } };
+    //     row_height += ")";
+    //     compositeRows += `<div style="width:100%; height: ${row_height};background-color: transparent !important;";></div>`;
+    //     for (let i = 0; i < rowArr.length; i++) {
+    //         //Check to see if the current entry has a start and end time. If not we break
+    //         let gourp_entry = `<div class="gonrin-gantt-row-group">`;
+    //         if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
+    //             break;
+    //         let currElStart = new Date(rowArr[i][this.startTimeAlias]),
+    //             currElEnd = new Date(rowArr[i][this.endTimeAlias]),
+    //             currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100;
+    //         if (i === 0 || (rowArr[i - 1] && new Date(rowArr[i - 1][this.endTimeAlias]) !== currElStart)) {
+    //             let difference = ((currElStart - baseTime) / totalTime) * 100;
+    //             gourp_entry += `<div style="width:${difference}%;"></div>`;
+    //         }
+    //         //If we don't have a linkAlias we assume the entries are not meant to link anywhere, so we just render them as divs instead.
+    //         let data_obj = '';
+    //         if (!!rowArr[i]?.dataBundle && typeof rowArr[i]?.dataBundle === "object") {
+    //             for (const key in rowArr[i].dataBundle) {
+    //                 if (Object.hasOwnProperty.call(rowArr[i].dataBundle, key)) {
+    //                     data_obj = data_obj + "data-" + key + `="` + rowArr[i].dataBundle[key] + `" `;
+    //                 }
+    //             }
+    //         }
+    //         if (this.linkAlias) {
+    //             gourp_entry += `<a class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" href="${rowArr[i][this.linkAlias]}" data-index="${dataIndex.join('-')}-${i}" 
+    //                 style="width:${currElRunPercent}%; height:${rowArr[i]?.height ?? ""};
+    //                 background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></a>`;
+    //         } else {
+    //             gourp_entry += `<div class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" data-index="${dataIndex.join('-')}-${i}" 
+    //                 style="width:${currElRunPercent}%;height:${rowArr[i]?.height ?? ""};
+    //                 background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></div>`;
+    //         }
+    //         gourp_entry += '</div>';
+    //         compositeRows += gourp_entry;
+    //     }
+    //     return compositeRows + '</div></div>';
+    // }
+
+    // buildRowNoOverlap(rowArr, dataIndex) {
+    //     let totalTime = this.maxTime - this.minTime,
+    //         compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
+    //     for (let i = 0; i < rowArr.length; i++) {
+    //         //Check to see if the current entry has a start and end time. If not we break
+    //         if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias])
+    //             break;
+    //         let currElStart = new Date(rowArr[i][this.startTimeAlias]),
+    //             currElEnd = new Date(rowArr[i][this.endTimeAlias]),
+    //             currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100;
+    //         if (i === 0 || (rowArr[i - 1] && new Date(rowArr[i - 1][this.endTimeAlias]) !== currElStart)) {
+    //             let baseTime = (i === 0 ? this.minTime : new Date(rowArr[i - 1][this.endTimeAlias])),
+    //                 difference = ((currElStart - baseTime) / totalTime) * 100;
+    //             compositeRows += `<div style="width:${difference}%;"></div>`;
+    //         }
+    //         //If we don't have a linkAlias we assume the entries are not meant to link anywhere, so we just render them as divs instead.
+    //         let data_obj = '';
+    //         if (!!rowArr[i]?.dataBundle && typeof rowArr[i]?.dataBundle === "object") {
+    //             for (const key in rowArr[i].dataBundle) {
+    //                 if (Object.hasOwnProperty.call(rowArr[i].dataBundle, key)) {
+    //                     data_obj = data_obj + "data-" + key + `="` + rowArr[i].dataBundle[key] + `" `;
+    //                 }
+    //             }
+    //         }
+
+    //         if (this.linkAlias) {
+    //             compositeRows += `<a class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" href="${rowArr[i][this.linkAlias]}" data-index="${dataIndex.join('-')}-${i}" 
+    //                 style="width:${currElRunPercent}%; height:${rowArr[i]?.height ?? ""};
+    //                 background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></a>`;
+    //         } else {
+    //             compositeRows += `<div class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" data-index="${dataIndex.join('-')}-${i}" 
+    //                 style="width:${currElRunPercent}%;height:${rowArr[i]?.height ?? ""};
+    //                 background-color: ${rowArr[i]?.bgcolor ?? ""} !important;"  ${data_obj}></div>`;
+    //         }
+    //     }
+    //     return compositeRows + '</div></div>';
+    // }
 
 
     buildContent() {
