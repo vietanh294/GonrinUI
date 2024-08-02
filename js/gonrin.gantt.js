@@ -1,7 +1,7 @@
 class Gantt {
     constructor(staticID, options) {
         this.staticID = staticID;
-        this.overlap_bar = true; // true/fasle
+        this.overlap_bar = false; // true/false
         this.sidebarHeader = options.sidebarHeader || 'Unused parameter right now';
         this.noDataFoundMessage = options.noDataFoundMessage || 'No data found.';
         this.startTimeAlias = options.startTimeAlias || 'startTime';
@@ -150,14 +150,25 @@ class Gantt {
             if (this.divisionCount > 1) {
                 for (let i = 0; i < this.divisionCount; i++) {
                     let date = new Date(this.minTime.getTime() + ((60 * 60 * 1000) * i)),
-                        hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours(),
-                        amPm = date.getHours() > 12 ? 'PM' : 'AM',
+                        _week_day = date.getDay(),
+                        _day = date.getDate(), _month = date.getMonth(),
+                        hour = date.getHours(),
                         minutes = date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes();
-                    headerDivs += `<div class="gonrin-gantt-header">${hour}:${minutes} ${amPm}</div>`;
+                    let style_header_color = '';
+                    if (_week_day == 0) {
+                        style_header_color = `style="background-color: ${this.sun_color}!important;"`;
+                    } else if (_week_day == 6) {
+                        style_header_color = `style="background-color: ${this.sat_color}!important;"`;
+                    }
+                    headerDivs += `<div class="gonrin-gantt-header" ${style_header_color}>${hour}:${minutes} ${_day}/${_month}</div>`;
                 }
+            } else {
+                let date = new Date(this.minTime.getTime()), hour = date.getHours(),
+                    minutes = date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes();
+                headerDivs += `<div class="gonrin-gantt-header">${hour}:${minutes}</div>`;
             }
             return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
-             repeat(${this.divisionCount}, 1fr)">${headerDivs}</div>`;
+                repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
         } else if (this.chartType === "day") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
@@ -180,7 +191,7 @@ class Gantt {
                 headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.day} ${day}</div>`;
             }
             return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
-             repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
+                repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
         }
         else if (this.chartType === "month") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
@@ -265,6 +276,18 @@ class Gantt {
         if ((this.chartType === "day")) {
             for (let i = 0; i < this.divisionCount; i++) {
                 let date = new Date(this.minTime.getTime() + ((24 * 60 * 60 * 1000) * i)),
+                    _week_day = date.getDay();
+                let style_header_color = '';
+                if (_week_day == 0) {
+                    style_header_color = `style="background-color: ${this.sun_color}!important;"`;
+                } else if (_week_day == 6) {
+                    style_header_color = `style="background-color: ${this.sat_color}!important;"`;
+                }
+                lines += `<div class="gonrin-gantt-line" ${style_header_color}></div>`;
+            }
+        } else if ((this.chartType === "hour")) {
+            for (let i = 0; i < this.divisionCount; i++) {
+                let date = new Date(this.minTime.getTime() + ((60 * 60 * 1000) * i)),
                     _week_day = date.getDay();
                 let style_header_color = '';
                 if (_week_day == 0) {
