@@ -151,7 +151,7 @@ class Gantt {
                 for (let i = 0; i < this.divisionCount; i++) {
                     let date = new Date(this.minTime.getTime() + ((60 * 60 * 1000) * i)),
                         _week_day = date.getDay(),
-                        _day = date.getDate(), _month = date.getMonth(),
+                        _day = date.getDate(), _month = date.getMonth() + 1,
                         hour = date.getHours(),
                         minutes = date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes();
                     let style_header_color = '';
@@ -175,7 +175,7 @@ class Gantt {
                 for (let i = 0; i < this.divisionCount; i++) {
                     let date = new Date(this.minTime.getTime() + ((24 * 60 * 60 * 1000) * i)),
                         _year = date.getFullYear(),
-                        _month = date.getMonth(),
+                        _month = date.getMonth() + 1,
                         _day = date.getDate(),
                         _week_day = date.getDay();
                     let style_header_color = '';
