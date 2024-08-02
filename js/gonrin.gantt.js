@@ -1,7 +1,7 @@
 class Gantt {
     constructor(staticID, options) {
         this.staticID = staticID;
-        this.overlap_bar = false; // true/false
+        this.overlap_bar = options.overlap_bar || false; // true/false
         this.sidebarHeader = options.sidebarHeader || 'Unused parameter right now';
         this.noDataFoundMessage = options.noDataFoundMessage || 'No data found.';
         this.startTimeAlias = options.startTimeAlias || 'startTime';
@@ -11,6 +11,10 @@ class Gantt {
         this.templateColumnWidth = options.templateColumnWidth || '150px';
         this.min_width_cont = 600;
         this.itemWidth = options.itemWidth || 50;
+
+        this.width_cont = 600;
+        this.items_width = [];
+        this.items_width_text = '';
 
         this.linkAlias = options.linkAlias;
         this.tooltipAlias = options.tooltipAlias || 'tooltip';
@@ -316,6 +320,51 @@ class Gantt {
     }
 
     buildRow(rowArr, dataIndex) {
+        if (!!this.overlap_bar) {
+            return this.buildRowOverlap();
+        }
+        let totalTime = this.maxTime - this.minTime, baseTime = this.minTime, row_height = " 1rem",
+            compositeRows = '';
+        for (let i = 0; i < rowArr.length; i++) {
+            //Check to see if the current entry has a start and end time. If not we break
+            row_height = rowArr[i]?.height || " 1rem";
+            compositeRows += `<div style="grid-column: 2/${this.divisionCount + 1};grid-row: ${i + 1};display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">` +
+                `<div style="width:100%; height: ${row_height};background-color: transparent !important;";></div>`;
+
+            if (!rowArr[i][this.startTimeAlias] || !rowArr[i][this.endTimeAlias]) { break; }
+            let currElStart = new Date(rowArr[i][this.startTimeAlias]),
+                currElEnd = new Date(rowArr[i][this.endTimeAlias]),
+                currElRunPercent = ((currElEnd - currElStart) / totalTime) * 100,
+                difference = ((currElStart - baseTime) / totalTime) * 100;
+
+            //If we don't have a linkAlias we assume the entries are not meant to link anywhere, so we just render them as divs instead.
+            let data_obj = '';
+            if (!!rowArr[i]?.dataBundle && typeof rowArr[i]?.dataBundle === "object") {
+                for (const key in rowArr[i].dataBundle) {
+                    if (Object.hasOwnProperty.call(rowArr[i].dataBundle, key)) {
+                        data_obj = data_obj + "data-" + key + `="` + rowArr[i].dataBundle[key] + `" `;
+                    }
+                }
+            }
+
+            if (this.linkAlias) {
+                compositeRows += `<a class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" href="${rowArr[i][this.linkAlias]}" data-index="${dataIndex.join('-')}-${i}" 
+                    style="width:${currElRunPercent}%; height:${rowArr[i]?.height ?? ""};
+                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;
+                    left: ${difference}%;"  ${data_obj}></a>`;
+            } else {
+                compositeRows += `<div class="gonrin-gantt-row-entry ${rowArr[i]?.cssClass ?? ""}" data-index="${dataIndex.join('-')}-${i}" 
+                    style="width:${currElRunPercent}%;height:${rowArr[i]?.height ?? ""};
+                    background-color: ${rowArr[i]?.bgcolor ?? ""} !important;                    
+                    left: ${difference}%;"  ${data_obj}></div>`;
+            }
+            compositeRows += '</div></div>';
+        }
+        return compositeRows;
+    }
+
+
+    buildRowOverlap(rowArr, dataIndex) {
         let totalTime = this.maxTime - this.minTime, baseTime = this.minTime, row_height = "max(1rem",
             compositeRows = `<div style="grid-column: 2/${this.divisionCount + 1};grid-row:1;display:flex;align-items:center"><div class="gonrin-gantt-sub-row-wrapper">`;
         for (let i = 0; i < rowArr.length; i++) { if (!!rowArr[i]?.height) { row_height += "," + rowArr[i]?.height; } };
@@ -466,8 +515,10 @@ class Gantt {
                         depth -= 1;
                     }
                     else if (Array.isArray(data[prop])) {
+                        let grid_row_temp = data[prop].length || "auto";
                         result.push(`<div class="gonrin-gantt-row" style="grid-template-columns: ${self.templateColumnWidth} 
-                            repeat(${self.divisionCount}, 1fr)"><div class="gonrin-gantt-sidebar-header">
+                            repeat(${self.divisionCount}, 1fr)">
+                            <div class="gonrin-gantt-sidebar-header" style="grid-row: 1 / span ${grid_row_temp};">
                             <div class="gonrin-gantt-sidebar-header-content">${data[prop][0][self.rowAlias]}</div>
                             </div>${self.buildRow(data[prop], dataIndex)}</div>`);
                     }
@@ -476,7 +527,6 @@ class Gantt {
             }
             result.push('</div>');
         }
-
     }
 
     buildChart() {
@@ -489,8 +539,7 @@ class Gantt {
         let bindElements = document.querySelectorAll(`#${this.staticID} .gonrin-gantt-row-entry`);
 
         bindElements.forEach(bindElement => {
-            let toolTipElement,
-                timeout;
+            let toolTipElement, timeout;
             bindElement.addEventListener('mouseover', e => {
                 let target = e.target,
                     indexArray = target.getAttribute('data-index').split('-'),
