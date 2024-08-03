@@ -480,7 +480,7 @@ class Gantt {
                         if ((self.chartType === "hour") || (self.chartType === "day")) {
                             grid_columns = ` repeat(${self.divisionCount}, 1fr)`;
                         } else {
-                            grid_columns = `${self.items_width.join('px ')}px`;
+                            grid_columns = self.items_width_text;
                         }
                         result.push(`<div class="gonrin-gantt-row" style="grid-template-columns: ${self.templateColumnWidth} ${grid_columns}">
                             <div class="gonrin-gantt-sidebar-header" style="grid-row: 1 / span ${grid_row_temp};">
