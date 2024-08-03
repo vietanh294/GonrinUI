@@ -127,10 +127,10 @@ class Gantt {
             this.divisionCount = Math.ceil(((this.maxTime.getFullYear() - this.minTime.getFullYear()) * 12
                 + this.maxTime.getMonth() - this.minTime.getMonth()) / 3) + 1;
             this.items_width = [];
-            let y = this.minTime.getFullYear(), m = this.minTime.getMonth(), mq = (Math.ceil((m + 1) / 3) * 3);
+            let y = this.minTime.getFullYear(), m = this.minTime.getMonth(), mq = (Math.floor((m + 1) / 3) * 3);
             for (let i = 0; i < this.divisionCount; i++) {
                 let the_first_day = new Date(y, mq + i * 3, 1).getTime();
-                let the_last_day = new Date(y, mq + 4 + i * 3, 1).getTime();
+                let the_last_day = new Date(y, mq + 3 + i * 3, 1).getTime();
                 let count_day = (the_last_day - the_first_day) / (24 * 60 * 60 * 1000);
                 let the_item_width = this.quarter_day_width * count_day;
                 this.items_width.push(the_item_width);
@@ -345,6 +345,10 @@ class Gantt {
         let currTime = new Date();
         let today_line_width = 50;
         today_line_width = (currTime - this.minTime) / (this.maxTime - this.minTime) * 100;
+        if ((today_line_width > 105) || (today_line_width < 0)) {
+            return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
+            ${this.items_width_text}; min-width: ${this.min_width_cont}px;">${lines}</div>`;
+        }
         if ((this.chartType === "hour") || (this.chartType === "day")) {
             lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
             width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${this.divisionCount - 1}fr  1fr;">
