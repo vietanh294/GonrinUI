@@ -311,6 +311,7 @@ class Gantt {
     }
 
     buildLines() {
+        let self = this;
         let lines = '<div class="gonrin-gantt-sidebar-template"></div>';
         if ((this.chartType === "day")) {
             for (let i = 0; i < this.divisionCount; i++) {
@@ -353,8 +354,16 @@ class Gantt {
             return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
                 repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;
         } else {
+            let columns_width = 0, add_width = 0, columns_width_text = '';
+            for (let i = 0; i < self.items_width.length; i++) {
+                if ((self.items_width.length - 1) == i) {
+                    add_width = self.items_width[i];
+                } else { columns_width += self.items_width[i] }
+            }
+            if (!!columns_width) { columns_width_text += " " + columns_width + "px" }
+            if (!!add_width) { columns_width_text += " " + add_width + "px" }
             lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
-            width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${this.items_width_text};">
+            width: calc(100% - ${this.templateColumnWidth}); grid-template-columns: ${columns_width_text};">
             <div class="gonrin-gantt-line">
             <div class="gonrin-gantt-today-line" style="width: ${today_line_width}%;"></div></div>
             <div class="gonrin-gantt-line"></div></div>`;
