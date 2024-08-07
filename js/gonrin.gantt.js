@@ -32,6 +32,8 @@ class Gantt {
         this.sun_color = options.sun_color || "#f7eded";
         this.sat_color = options.sat_color || "#f1f6f7";
         this.weekday_text = options.weekday_text || ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        this.monthday_text = options.monthday_text || ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        this.use_monthday_text = options.use_monthday_text || false;
 
         this.data = {};
         this.rawData = [];
@@ -184,13 +186,16 @@ class Gantt {
 
     //Creates the header for the Gantt chart
     buildHeader() {
+        let self = this;
         if (this.chartType === "hour") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
+            let headerDivsDay = `<div class="gonrin-gantt-header-spacer"></div>`;
+            let count_fr = 0;
+            let list_days = [];
             if (this.divisionCount > 1) {
                 for (let i = 0; i < this.divisionCount; i++) {
                     let date = new Date(this.minTime.getTime() + ((60 * 60 * 1000) * i)),
                         _week_day = date.getDay(),
-                        _day = date.getDate(), _month = date.getMonth() + 1,
                         hour = date.getHours(),
                         minutes = date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes();
                     let style_header_color = '';
@@ -199,15 +204,43 @@ class Gantt {
                     } else if (_week_day == 6) {
                         style_header_color = `style="background-color: ${this.sat_color}!important;"`;
                     }
-                    headerDivs += `<div class="gonrin-gantt-header" ${style_header_color}>${hour}:${minutes} ${_day}/${_month}</div>`;
+                    headerDivs += `<div class="gonrin-gantt-header" ${style_header_color}>${hour}:${minutes}</div>`;
+                    count_fr += 1;
+                    if (hour === 23) {
+                        list_days.push(count_fr);
+                        count_fr = 0;
+                    }
                 }
+                if (count_fr != 24) {
+                    list_days.push(count_fr);
+                }
+                let grid_columns_fr = '';
+                for (let j = 0; j < list_days.length; j++) {
+                    let date = new Date(this.minTime.getTime() + ((60 * 60 * 1000 * 24) * j)),
+                        _week_day = date.getDay(),
+                        _day = date.getDate(), _month = date.getMonth() + 1;
+                    let style_header_color = '';
+                    if (_week_day == 0) {
+                        style_header_color = `style="background-color: ${this.sun_color}!important;"`;
+                    } else if (_week_day == 6) {
+                        style_header_color = `style="background-color: ${this.sat_color}!important;"`;
+                    }
+                    headerDivsDay += `<div class="gonrin-gantt-header" ${style_header_color}>${this.translateLang.day} ${_day}/${_month}</div>`;
+                    grid_columns_fr += list_days[j] + "fr ";
+                }
+                return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
+                ${grid_columns_fr}; min-width: ${this.min_width_cont}px;">${headerDivsDay}</div>
+                <div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
+                repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
+
             } else {
                 let date = new Date(this.minTime.getTime()), hour = date.getHours(),
                     minutes = date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes();
                 headerDivs += `<div class="gonrin-gantt-header">${hour}:${minutes}</div>`;
-            }
-            return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
+                return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
                 repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
+
+            }
         } else if (this.chartType === "day") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
@@ -235,13 +268,11 @@ class Gantt {
         else if (this.chartType === "month") {
             let headerDivs = `<div class="gonrin-gantt-header-spacer"></div>`;
             if (this.divisionCount > 1) {
-                // let the_max_time_month = this.maxTime.getMonth();
                 let the_min_time_month = this.minTime.getMonth() + 1;
                 let the_year = this.minTime.getFullYear();
                 let change_year = false;
                 for (let i = 0; i < this.divisionCount; i++) {
                     let month_text = the_min_time_month + i;
-                    // let month_text = the_max_time_month - (this.divisionCount % 12) + 1 + i;
                     month_text = (month_text + 12) % 12;
                     if (change_year) {
                         change_year = false;
@@ -251,15 +282,21 @@ class Gantt {
                         month_text = 12;
                         change_year = true;
                     }
+                    if (!!this.use_monthday_text) {
+                        month_text = self.monthday_text[month_text - 1];
+                    } else {
+                        month_text = self.translateLang.month + " " + month_text;
+                    }
                     if (this.maxTime.getFullYear() !== this.minTime.getFullYear()) {
                         let year = the_year % 100;
-                        month_text = month_text + "/" + year;
+                        let separate_month = this.use_monthday_text ? "-" : "/";
+                        month_text = month_text + separate_month + year;
                     }
-                    headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.month} ${month_text}</div>`;
+                    headerDivs += `<div class="gonrin-gantt-header">${month_text}</div>`;
                 }
             } else {
                 let month = this.minTime.getMonth();
-                headerDivs += `<div class="gonrin-gantt-header">${this.translateLang.month} ${month}</div>`;
+                headerDivs += `<div class="gonrin-gantt-header">${this.monthday_text[month]} </div>`;
             }
             return `<div class="gonrin-gantt-headers" style="grid-template-columns: ${this.templateColumnWidth} 
                 ${this.items_width_text}; min-width: ${this.min_width_cont}px;">${headerDivs}</div>`;
@@ -346,8 +383,13 @@ class Gantt {
         let today_line_width = 50;
         today_line_width = (currTime - this.minTime) / (this.maxTime - this.minTime) * 100;
         if ((today_line_width > 105) || (today_line_width < 0)) {
-            return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
-            ${this.items_width_text}; min-width: ${this.min_width_cont}px;">${lines}</div>`;
+            if ((this.chartType === "hour") || (this.chartType === "day")) {
+                return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
+                repeat(${this.divisionCount}, 1fr); min-width: ${this.min_width_cont}px;">${lines}</div>`;
+            } else {
+                return `<div class="gonrin-gantt-lines-container" style="grid-template-columns: ${this.templateColumnWidth} 
+                ${this.items_width_text}; min-width: ${this.min_width_cont}px;">${lines}</div>`;
+            }
         }
         if ((this.chartType === "hour") || (this.chartType === "day")) {
             lines += `<div class="gonrin-gantt-today-container" style="left: ${this.templateColumnWidth}; 
